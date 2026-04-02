@@ -83,7 +83,7 @@ export function ProductCard({ product }: ProductCardProps) {
     <div className="group bg-card rounded-2xl border border-border/60 flex flex-col h-full overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-foreground/5 hover:border-border">
       <Link to={`/product/${product.slug}`} className="block flex-1">
         {/* Image */}
-        <div className="relative aspect-[4/5] overflow-hidden bg-secondary/50">
+        <div className="relative aspect-[5/5] overflow-hidden bg-secondary/50">
           <img
             src={product.images[0] || '/placeholder.svg'}
             alt={product.name}
@@ -112,11 +112,11 @@ export function ProductCard({ product }: ProductCardProps) {
         </div>
 
         {/* Content */}
-        <div className="p-4">
+        <div className="px-3 py-2 sm:px-4 sm:py-4">
           <p className="text-[11px] text-muted-foreground mb-1 uppercase tracking-widest font-medium">
             {product.category?.name || t('product.uncategorized')}
           </p>
-          <h3 className="font-semibold text-sm line-clamp-2 mb-2 group-hover:text-primary transition-colors leading-snug">
+          <h3 className="font-semibold text-sm line-clamp-1 sm:line-clamp-2 mb-2 group-hover:text-primary transition-colors leading-snug">
             {product.name}
           </h3>
           <div className="flex items-baseline gap-2">
