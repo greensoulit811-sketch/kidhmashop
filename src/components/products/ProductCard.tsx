@@ -31,7 +31,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
     setIsAddingToCart(true);
     await new Promise(resolve => setTimeout(resolve, 300));
-    
+
     addItem({
       id: product.id,
       name: product.name,
@@ -41,11 +41,11 @@ export function ProductCard({ product }: ProductCardProps) {
       quantity: 1,
       stock: product.stock,
     });
-    
+
     toast.success(t('product.addedToCart'), {
       description: product.name,
     });
-    
+
     setIsAddingToCart(false);
   };
 
@@ -60,7 +60,7 @@ export function ProductCard({ product }: ProductCardProps) {
     }
 
     setIsBuyingNow(true);
-    
+
     addItem({
       id: product.id,
       name: product.name,
@@ -70,7 +70,7 @@ export function ProductCard({ product }: ProductCardProps) {
       quantity: 1,
       stock: product.stock,
     });
-    
+
     navigate('/checkout?mode=buynow');
   };
 
@@ -104,7 +104,7 @@ export function ProductCard({ product }: ProductCardProps) {
               </span>
             )}
           </div>
-          
+
           {/* Wishlist Button */}
           <div className="absolute top-3 right-3 z-10">
             <WishlistButton productId={product.id} size="sm" className="bg-background/90 backdrop-blur-sm shadow-sm border-0" />
