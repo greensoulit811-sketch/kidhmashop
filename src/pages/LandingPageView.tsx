@@ -51,44 +51,61 @@ const useLandingProducts = (ids: string[]) => {
 };
 
 const PricingBanner = ({ oldPrice, newPrice }: { oldPrice: string; newPrice: string }) => (
-  <div className="w-full mt-8 px-2">
-    <div className="relative bg-[#14532d] py-10 md:py-16 overflow-hidden rounded-2xl shadow-2xl">
-      {/* Decorative background */}
-      <div className="absolute inset-0 opacity-10 pointer-events-none">
-        <svg className="w-full h-full opacity-30" viewBox="0 0 100 100" preserveAspectRatio="none">
-          <pattern id="leaf-pattern" width="20" height="20" patternUnits="userSpaceOnUse">
-            <path d="M10 0 Q 15 10 10 20 Q 5 10 10 0 Z" fill="white" />
+  <div className="w-full mt-10 px-2">
+    <div className="relative bg-[#14532d] py-12 md:py-20 overflow-hidden rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.3)]">
+      {/* Decorative shimmering background */}
+      <div className="absolute inset-0 opacity-20 pointer-events-none">
+        <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+        <svg className="w-full h-full opacity-40" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <pattern id="leaf-pattern-v2" width="15" height="15" patternUnits="userSpaceOnUse">
+            <path d="M7.5 0 Q 10 7.5 7.5 15 Q 5 7.5 7.5 0 Z" fill="white" />
           </pattern>
-          <rect width="100" height="100" fill="url(#leaf-pattern)" />
+          <rect width="100" height="100" fill="url(#leaf-pattern-v2)" />
         </svg>
       </div>
 
+      {/* Outer Glow */}
+      <div className="absolute -inset-24 bg-[#bef264]/10 blur-[100px] animate-pulse pointer-events-none" />
+
       {/* Frame */}
-      <div className="absolute inset-4 md:inset-6 border-[1.5px] border-dashed border-[#bef264]/30 rounded-xl" />
+      <div className="absolute inset-4 md:inset-6 border-[2px] border-dashed border-[#bef264]/40 rounded-xl" />
       
-      <div className="relative z-10 text-center flex flex-col items-center justify-center space-y-6 px-6 max-w-6xl mx-auto">
-        {/* Old Price Row */}
-        <div className="relative group">
-          <div className="text-xl md:text-3xl font-bold text-white/90 tracking-wide flex items-center justify-center gap-2">
-            <span className="relative inline-block py-1">
-              {oldPrice}
-              <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[2px] md:h-[4px] bg-red-600 -rotate-12 rounded-full shadow-[0_0_10px_rgba(220,38,38,0.5)]" />
-              <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[2px] md:h-[4px] bg-red-600 rotate-12 rounded-full shadow-[0_0_10px_rgba(220,38,38,0.5)]" />
-            </span>
-          </div>
+      <div className="relative z-10 text-center flex flex-col items-center justify-center space-y-8 px-6 max-w-6xl mx-auto">
+        {/* Old Price */}
+        <div className="text-xl md:text-3xl font-bold text-white/80 tracking-widest flex items-center justify-center gap-3">
+          <span className="relative inline-block px-4 py-2">
+            {oldPrice}
+            <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[3px] md:h-[5px] bg-red-600 -rotate-12 rounded-full shadow-[0_0_15px_rgba(220,38,38,0.7)]" />
+            <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[3px] md:h-[5px] bg-red-600 rotate-12 rounded-full shadow-[0_0_15px_rgba(220,38,38,0.7)]" />
+          </span>
         </div>
         
-        {/* New Price Row */}
-        <div className="flex flex-col items-center gap-2">
-          <div className="text-4xl md:text-7xl font-black text-white flex flex-wrap items-center justify-center gap-x-4 md:gap-x-6 lowercase tracking-tight leading-none">
-            <span className="text-[#bef264] drop-shadow-md">{newPrice}</span>
+        {/* New Price with Animation */}
+        <div className="flex flex-col items-center group cursor-default">
+          <div className="text-5xl md:text-8xl font-black flex flex-wrap items-center justify-center gap-x-4 md:gap-x-6 tracking-tighter leading-none animate-bounce-subtle">
+            <span className="text-[#bef264] drop-shadow-[0_0_25px_rgba(190,242,100,0.6)] filter brightness-110">
+              {newPrice}
+            </span>
           </div>
-          {/* Decorative double underline under focus price */}
-          <div className="w-full h-2 md:h-3 bg-[#facc15] rounded-full shadow-[0_0_20px_rgba(250,204,21,0.5)] mt-2" />
-          <div className="w-3/4 h-1.5 md:h-2 bg-[#facc15] rounded-full opacity-50 mt-1" />
+          
+          {/* Animated Highlight Underline */}
+          <div className="relative w-full max-w-[400px] h-3 md:h-4 mt-6">
+            <div className="absolute inset-0 bg-[#facc15] rounded-full shadow-[0_0_30px_rgba(250,204,21,0.8)] animate-pulse" />
+            <div className="absolute inset-x-12 -bottom-2 h-2 bg-[#facc15] rounded-full opacity-40 blur-[1px]" />
+          </div>
         </div>
       </div>
     </div>
+    
+    <style>{`
+      @keyframes bounce-subtle {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+      }
+      .animate-bounce-subtle {
+        animation: bounce-subtle 3s ease-in-out infinite;
+      }
+    `}</style>
   </div>
 );
 
