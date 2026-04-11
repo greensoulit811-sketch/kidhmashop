@@ -159,7 +159,7 @@ export default function CartPage() {
               </div>
 
               <Link to="/checkout">
-                <Button size="lg" className="btn-accent w-full">
+                <Button size="lg" className="btn-buy-now w-full h-12 text-sm md:text-base">
                   {t('cart.proceedToCheckout')}
                   <ArrowRight className="h-4 w-4 ml-2" />
                 </Button>

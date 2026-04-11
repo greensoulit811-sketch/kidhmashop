@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useLandingPage } from '@/hooks/useLandingPages';
 import { useSiteSettings } from '@/contexts/SiteSettingsContext';
@@ -14,7 +14,22 @@ import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Star, ShoppingBag, ChevronDown } from 'lucide-react';
 import { toast } from 'sonner';
+import { Layout } from '@/components/layout/Layout';
 
+const getVideoEmbedUrl = (url: string) => {
+  const value = url.trim();
+  if (!value) return '';
+  if (value.includes('youtube.com/embed/')) return value;
+  if (value.includes('youtube.com/watch') || value.includes('youtu.be/')) {
+    const match = value.match(/(?:v=|youtu\.be\/)([A-Za-z0-9_-]{11})/);
+    if (match?.[1]) return `https://www.youtube.com/embed/${match[1]}`;
+  }
+  if (value.includes('vimeo.com/')) {
+    const match = value.match(/vimeo\.com\/(\d+)/);
+    if (match?.[1]) return `https://player.vimeo.com/video/${match[1]}`;
+  }
+  return value;
+};
 
 // Fetch products by IDs
 const useLandingProducts = (ids: string[]) => {
@@ -35,8 +50,51 @@ const useLandingProducts = (ids: string[]) => {
   });
 };
 
-export default function LandingPageView() {
-  const { slug } = useParams<{ slug: string }>();
+const PricingBanner = ({ oldPrice, newPrice }: { oldPrice: string; newPrice: string }) => (
+  <div className="w-full mt-8 mb-12 px-2">
+    <div className="relative bg-[#14532d] py-10 md:py-16 overflow-hidden rounded-2xl shadow-2xl">
+      {/* Decorative background */}
+      <div className="absolute inset-0 opacity-10 pointer-events-none">
+        <svg className="w-full h-full opacity-30" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <pattern id="leaf-pattern" width="20" height="20" patternUnits="userSpaceOnUse">
+            <path d="M10 0 Q 15 10 10 20 Q 5 10 10 0 Z" fill="white" />
+          </pattern>
+          <rect width="100" height="100" fill="url(#leaf-pattern)" />
+        </svg>
+      </div>
+
+      {/* Frame */}
+      <div className="absolute inset-4 md:inset-6 border-[1.5px] border-dashed border-[#bef264]/30 rounded-xl" />
+      
+      <div className="relative z-10 text-center flex flex-col items-center justify-center space-y-6 px-6 max-w-6xl mx-auto">
+        {/* Old Price Row */}
+        <div className="relative group">
+          <div className="text-xl md:text-3xl font-bold text-white/90 tracking-wide flex items-center justify-center gap-2">
+            <span className="relative inline-block py-1">
+              {oldPrice}
+              <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[2px] md:h-[4px] bg-red-600 -rotate-12 rounded-full shadow-[0_0_10px_rgba(220,38,38,0.5)]" />
+              <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[2px] md:h-[4px] bg-red-600 rotate-12 rounded-full shadow-[0_0_10px_rgba(220,38,38,0.5)]" />
+            </span>
+          </div>
+        </div>
+        
+        {/* New Price Row */}
+        <div className="flex flex-col items-center gap-2">
+          <div className="text-4xl md:text-7xl font-black text-white flex flex-wrap items-center justify-center gap-x-4 md:gap-x-6 lowercase tracking-tight leading-none">
+            <span className="text-[#bef264] drop-shadow-md">{newPrice}</span>
+          </div>
+          {/* Decorative double underline under focus price */}
+          <div className="w-full h-2 md:h-3 bg-[#facc15] rounded-full shadow-[0_0_20px_rgba(250,204,21,0.5)] mt-2" />
+          <div className="w-3/4 h-1.5 md:h-2 bg-[#facc15] rounded-full opacity-50 mt-1" />
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
+  const { slug: slugParam } = useParams<{ slug: string }>();
+  const slug = slugProp || slugParam;
   const navigate = useNavigate();
   const { data: page, isLoading } = useLandingPage(slug || '');
   const { t, formatCurrency, settings } = useSiteSettings();
@@ -53,11 +111,9 @@ export default function LandingPageView() {
   const [formData, setFormData] = useState({
     fullName: '',
     phone: '',
-    email: '',
     address: '',
     city: '',
     country: settings.default_country_name,
-    notes: '',
     shippingMethodId: '',
     paymentMethodId: '',
   });
@@ -133,7 +189,6 @@ export default function LandingPageView() {
           user_id: user?.id || null,
           customer_name: formData.fullName,
           customer_phone: formData.phone,
-          customer_email: formData.email || null,
           shipping_address: formData.address,
           shipping_city: formData.city,
           shipping_method: selectedShipping?.name || 'Standard',
@@ -142,7 +197,6 @@ export default function LandingPageView() {
           subtotal,
           total,
           status: 'pending',
-          notes: formData.notes || null,
           payment_method_id: selectedPayment?.id || null,
           payment_method_name: selectedPayment?.name || 'Cash on Delivery',
           payment_status: hasPartial ? 'partial_paid' : 'unpaid',
@@ -179,14 +233,15 @@ export default function LandingPageView() {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold mb-2">Page Not Found</h1>
-          <Button onClick={() => navigate('/')}>Go Home</Button>
+          <h1 className="text-2xl font-bold mb-2">{t('common.pageNotFound') || 'Page Not Found'}</h1>
+          <Button onClick={() => navigate('/')}>{t('common.goHome') || 'Go Home'}</Button>
         </div>
       </div>
     );
   }
 
   return (
+    <Layout>
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
       <section
@@ -207,17 +262,69 @@ export default function LandingPageView() {
               {page.hero_subtitle}
             </p>
           )}
-          <Button size="lg" className="btn-accent text-lg px-8 py-6" onClick={scrollToCheckout}>
+          <Button size="lg" className="btn-accent text-xl px-12 py-8" onClick={scrollToCheckout}>
             {page.hero_cta_text}
             <ChevronDown className="ml-2 h-5 w-5" />
           </Button>
         </div>
       </section>
 
+      {page.video_url && (
+        <section className="py-12 md:py-16 px-4 bg-secondary/10">
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-2xl md:text-4xl font-bold text-center mb-8">
+              {page.video_section_title || t('landingPage.videoOverview') || 'Watch the Video'}
+            </h2>
+            <div className="rounded-3xl overflow-hidden border-[6px] border-[#22C55E] shadow-xl transition-all hover:scale-[1.01] duration-300">
+              <div className="aspect-video bg-black">
+                <iframe
+                  src={getVideoEmbedUrl(page.video_url)}
+                  title={page.hero_title + ' video'}
+                  className="w-full h-full"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              </div>
+            </div>
+            
+            {page.video_bottom_title && (
+              <div className="mt-8 text-center">
+                <p className="text-xl md:text-3xl font-extrabold text-foreground leading-tight px-4">
+                  {page.video_bottom_title.split(/(\[\[.*?\]\])/).map((part, i) => {
+                    if (part.startsWith('[[') && part.endsWith(']]')) {
+                      return (
+                        <span key={i} className="text-[#22C55E]">
+                          {part.substring(2, part.length - 2)}
+                        </span>
+                      );
+                    }
+                    return part;
+                  })}
+                </p>
+              </div>
+            )}
+
+            <div className="mt-10 text-center">
+              <Button 
+                size="lg" 
+                className="btn-accent text-xl px-12 py-8 rounded-full shadow-lg hover:shadow-accent/40"
+                onClick={scrollToCheckout}
+              >
+                {page.hero_cta_text}
+              </Button>
+            </div>
+
+            {page.show_banner && page.banner_old_price && page.banner_new_price && (
+              <PricingBanner oldPrice={page.banner_old_price} newPrice={page.banner_new_price} />
+            )}
+          </div>
+        </section>
+      )}
+
       {/* Products Section */}
       <section className="py-12 md:py-16 px-4">
         <div className="max-w-5xl mx-auto">
-          <h2 className="text-2xl md:text-3xl font-bold text-center mb-10">{t('common.ourProducts') || t('nav.products') || 'Products'}</h2>
+          <h2 className="text-2xl md:text-3xl font-bold text-center mb-10">{t('common.ourProducts') || 'Our Products'}</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {products.map(product => {
               const price = product.sale_price ?? product.price;
@@ -244,7 +351,7 @@ export default function LandingPageView() {
                         <span className="text-sm text-muted-foreground line-through">{formatCurrency(product.price)}</span>
                       )}
                     </div>
-                    <Button className="btn-accent w-full mt-3" onClick={(e) => { e.stopPropagation(); setSelectedProduct(product); setQuantity(1); scrollToCheckout(); }}>
+                    <Button className="btn-accent w-full mt-3 py-6 text-lg" onClick={(e) => { e.stopPropagation(); setSelectedProduct(product); setQuantity(1); scrollToCheckout(); }}>
                       {page.hero_cta_text}
                     </Button>
                   </div>
@@ -255,11 +362,10 @@ export default function LandingPageView() {
         </div>
       </section>
 
-      {/* How to Use Section */}
       {page.how_to_use_cards.length > 0 && (
         <section className="py-12 md:py-16 px-4 bg-secondary/30">
           <div className="max-w-5xl mx-auto">
-            <h2 className="text-2xl md:text-3xl font-bold text-center mb-10">{t('common.howToUse') || 'How to Use'}</h2>
+            <h2 className="text-2xl md:text-3xl font-bold text-center mb-10">{t('উপাদান') || 'How to Use'}</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {page.how_to_use_cards.map((card, i) => (
                 <div key={i} className="bg-card border border-border rounded-xl overflow-hidden">
@@ -279,7 +385,7 @@ export default function LandingPageView() {
               ))}
             </div>
             <div className="text-center mt-8">
-              <Button size="lg" className="btn-accent" onClick={scrollToCheckout}>
+              <Button size="lg" className="btn-accent text-xl px-12 py-8" onClick={scrollToCheckout}>
                 {page.hero_cta_text}
               </Button>
             </div>
@@ -287,11 +393,10 @@ export default function LandingPageView() {
         </section>
       )}
 
-      {/* Reviews Section */}
       {page.show_reviews && reviews.length > 0 && (
         <section className="py-12 md:py-16 px-4">
           <div className="max-w-5xl mx-auto">
-            <h2 className="text-2xl md:text-3xl font-bold text-center mb-10">{t('reviews.title') || 'Customer Reviews'}</h2>
+            <h2 className="text-2xl md:text-3xl font-bold text-center mb-10">{t('common.customerReviews') || 'Customer Reviews'}</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {reviews.slice(0, 6).map(review => (
                 <div key={review.id} className="bg-card border border-border rounded-xl p-5">
@@ -306,7 +411,7 @@ export default function LandingPageView() {
               ))}
             </div>
             <div className="text-center mt-8">
-              <Button size="lg" className="btn-accent" onClick={scrollToCheckout}>
+              <Button size="lg" className="btn-accent text-xl px-12 py-8" onClick={scrollToCheckout}>
                 {page.hero_cta_text}
               </Button>
             </div>
@@ -314,7 +419,6 @@ export default function LandingPageView() {
         </section>
       )}
 
-      {/* Checkout Section */}
       <section id="lp-checkout" className="py-12 md:py-16 px-4 bg-secondary/30">
         <div className="max-w-3xl mx-auto">
           <h2 className="text-2xl md:text-3xl font-bold text-center mb-2">
@@ -328,7 +432,6 @@ export default function LandingPageView() {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Selected Product Summary */}
             {selectedProduct && (
               <div className="bg-card border border-border rounded-xl p-4 flex items-center gap-4">
                 <img src={selectedProduct.images?.[0]} alt="" className="w-16 h-16 rounded-lg object-cover" />
@@ -344,7 +447,6 @@ export default function LandingPageView() {
               </div>
             )}
 
-            {/* Contact */}
             <div className="bg-card border border-border rounded-xl p-5 space-y-4">
               <h3 className="font-semibold">{t('checkout.contactInfo') || 'Contact Information'}</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -352,18 +454,13 @@ export default function LandingPageView() {
                   <label className="block text-sm font-medium mb-1">{t('checkout.fullName') || 'Full Name'} *</label>
                   <Input name="fullName" value={formData.fullName} onChange={handleChange} required />
                 </div>
-                <div>
+                <div className="sm:col-span-2">
                   <label className="block text-sm font-medium mb-1">{t('checkout.phone') || 'Phone'} *</label>
                   <Input name="phone" type="tel" value={formData.phone} onChange={handleChange} required />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">{t('checkout.emailOptional') || 'Email'}</label>
-                  <Input name="email" type="email" value={formData.email} onChange={handleChange} />
                 </div>
               </div>
             </div>
 
-            {/* Address */}
             <div className="bg-card border border-border rounded-xl p-5 space-y-4">
               <h3 className="font-semibold">{t('checkout.shippingAddress') || 'Shipping Address'}</h3>
               <Input name="country" value={formData.country} readOnly className="bg-muted cursor-not-allowed" />
@@ -375,13 +472,8 @@ export default function LandingPageView() {
                 <label className="block text-sm font-medium mb-1">{t('checkout.city') || 'City'} *</label>
                 <Input name="city" value={formData.city} onChange={handleChange} required />
               </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">{t('checkout.orderNotes') || 'Notes'}</label>
-                <textarea name="notes" value={formData.notes} onChange={handleChange} className="input-shop min-h-[80px]" />
-              </div>
             </div>
 
-            {/* Shipping */}
             <div className="bg-card border border-border rounded-xl p-5 space-y-3">
               <h3 className="font-semibold">{t('checkout.shippingMethod') || 'Shipping Method'}</h3>
               {shippingMethods.map(m => (
@@ -396,7 +488,6 @@ export default function LandingPageView() {
               ))}
             </div>
 
-            {/* Payment */}
             <div className="bg-card border border-border rounded-xl p-5 space-y-3">
               <h3 className="font-semibold">{t('checkout.paymentMethod') || 'Payment Method'}</h3>
               {paymentMethods.map(pm => (
@@ -432,7 +523,6 @@ export default function LandingPageView() {
               )}
             </div>
 
-            {/* Order Total */}
             <div className="bg-card border border-border rounded-xl p-5 space-y-3">
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">{t('cart.subtotal') || 'Subtotal'}</span>
@@ -449,12 +539,13 @@ export default function LandingPageView() {
               </div>
             </div>
 
-            <Button type="submit" size="lg" className="btn-accent w-full text-lg py-6" disabled={createOrder.isPending || !selectedProduct}>
+            <Button type="submit" size="lg" className="btn-accent w-full text-xl py-8" disabled={createOrder.isPending || !selectedProduct}>
               {createOrder.isPending ? (t('checkout.processing') || 'Processing...') : (page.hero_cta_text || t('checkout.placeOrder') || 'Place Order')}
             </Button>
           </form>
         </div>
       </section>
     </div>
+    </Layout>
   );
 }

@@ -1,3 +1,11 @@
+﻿node.exe : Initialising login role...
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Initialising login role...:String 
+   ) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
 export type Json =
   | string
   | number
@@ -10,7 +18,7 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "14.1"
+    PostgrestVersion: "14.5"
   }
   public: {
     Tables: {
@@ -941,26 +949,53 @@ export type Database = {
           id: string
           is_approved: boolean | null
           name: string
+          order_id: string | null
+          product_id: string | null
           rating: number
           text: string
+          user_id: string | null
+          verified_purchase: boolean | null
         }
         Insert: {
           created_at?: string
           id?: string
           is_approved?: boolean | null
           name: string
+          order_id?: string | null
+          product_id?: string | null
           rating: number
           text: string
+          user_id?: string | null
+          verified_purchase?: boolean | null
         }
         Update: {
           created_at?: string
           id?: string
           is_approved?: boolean | null
           name?: string
+          order_id?: string | null
+          product_id?: string | null
           rating?: number
           text?: string
+          user_id?: string | null
+          verified_purchase?: boolean | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "reviews_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reviews_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       shipping_methods: {
         Row: {
@@ -1224,6 +1259,18 @@ export type Database = {
         Returns: boolean
       }
       is_admin: { Args: { _user_id: string }; Returns: boolean }
+      update_how_to_use_video: {
+        Args: {
+          p_description?: string
+          p_id: string
+          p_is_active?: boolean
+          p_sort_order?: number
+          p_title?: string
+          p_video_type?: string
+          p_video_url?: string
+        }
+        Returns: Json
+      }
     }
     Enums: {
       app_role: "admin" | "customer" | "manager" | "order_handler"

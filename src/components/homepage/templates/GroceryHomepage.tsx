@@ -136,7 +136,6 @@ function ComboOffersSection({ section }: { section: HomepageSection }) {
         <h2 className={`text-xl font-bold mb-6 text-center reveal-base ${isVisible ? 'reveal-visible' : ''}`}>
           {section.title}
         </h2>
-        <p className="text-muted-foreground text-center mb-6">{section.subtitle}</p>
         <div className="product-grid">
           {products.slice(0, 4).map((p) => (
             <ProductCard key={p.id} product={p} />

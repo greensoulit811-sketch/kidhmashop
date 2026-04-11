@@ -23,6 +23,12 @@ const emptyForm = (): Omit<LandingPage, 'id' | 'created_at' | 'updated_at'> => (
   hero_subtitle: '',
   hero_image: '',
   hero_cta_text: 'Order Now',
+  video_url: '',
+  video_section_title: 'Watch the Video',
+  video_bottom_title: '',
+  banner_old_price: '',
+  banner_new_price: '',
+  show_banner: false,
   product_ids: [],
   how_to_use_cards: [],
   show_reviews: true,
@@ -55,6 +61,12 @@ export default function AdminLandingPages() {
       hero_subtitle: p.hero_subtitle || '',
       hero_image: p.hero_image || '',
       hero_cta_text: p.hero_cta_text,
+      video_url: p.video_url || '',
+      video_section_title: p.video_section_title || 'Watch the Video',
+      video_bottom_title: p.video_bottom_title || '',
+      banner_old_price: p.banner_old_price || '',
+      banner_new_price: p.banner_new_price || '',
+      show_banner: p.show_banner || false,
       product_ids: p.product_ids || [],
       how_to_use_cards: p.how_to_use_cards || [],
       show_reviews: p.show_reviews,
@@ -249,6 +261,68 @@ export default function AdminLandingPages() {
                 <label className="block text-sm font-medium mb-1">CTA Button Text</label>
                 <Input value={form.hero_cta_text} onChange={e => setForm(prev => ({ ...prev, hero_cta_text: e.target.value }))} />
               </div>
+            </div>
+
+            {/* Video Section */}
+            <div className="space-y-4">
+              <h3 className="font-semibold text-sm text-muted-foreground uppercase">Video Section</h3>
+              <div>
+                <label className="block text-sm font-medium mb-1">Video URL</label>
+                <Input
+                  value={form.video_url || ''}
+                  onChange={e => setForm(prev => ({ ...prev, video_url: e.target.value }))}
+                  placeholder="https://youtu.be/... or https://www.youtube.com/watch?v=..."
+                />
+                <p className="text-xs text-muted-foreground mt-1">Paste a YouTube or Vimeo link to show a landing page video.</p>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1">Video Section Title</label>
+                  <Input
+                    value={form.video_section_title || ''}
+                    onChange={e => setForm(prev => ({ ...prev, video_section_title: e.target.value }))}
+                    placeholder="Watch the Video"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Nice Title (Below Video)</label>
+                  <Input
+                    value={form.video_bottom_title || ''}
+                    onChange={e => setForm(prev => ({ ...prev, video_bottom_title: e.target.value }))}
+                    placeholder="Use [[text]] for green highlight"
+                  />
+                  <p className="text-[10px] text-muted-foreground mt-1">Example: All [[7000+ happy]] customers</p>
+                </div>
+              </div>
+            </div>
+            
+            {/* Promotion Banner */}
+            <div className="space-y-4">
+              <h3 className="font-semibold text-sm text-muted-foreground uppercase">Promotion Banner</h3>
+              <div className="flex items-center gap-2 mb-4">
+                <Switch checked={form.show_banner} onCheckedChange={v => setForm(prev => ({ ...prev, show_banner: v }))} />
+                <span className="text-sm">Show Pricing Banner (below button)</span>
+              </div>
+              {form.show_banner && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 border border-border rounded-lg p-4 bg-secondary/10">
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Old Price (e.g. ১২৫০)</label>
+                    <Input
+                      value={form.banner_old_price || ''}
+                      onChange={e => setForm(prev => ({ ...prev, banner_old_price: e.target.value }))}
+                      placeholder="১২৫০"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-1">New Price (e.g. ৫৯০)</label>
+                    <Input
+                      value={form.banner_new_price || ''}
+                      onChange={e => setForm(prev => ({ ...prev, banner_new_price: e.target.value }))}
+                      placeholder="৫৯০"
+                    />
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Products */}

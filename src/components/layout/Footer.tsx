@@ -9,15 +9,14 @@ export function Footer() {
 
   const footerLinks = {
     shop: [
-      { name: t('nav.shop'), href: '/shop' },
-      { name: t('home.newArrivals'), href: '/shop?filter=new' },
-      { name: t('home.bestSellers'), href: '/shop?filter=bestsellers' },
-      { name: t('product.sale'), href: '/shop?filter=sale' },
+      { name: t('nav.home'), href: '/' },
+      { name: t('nav.contact'), href: '/contact' },
+      { name: t('footer.aboutUs'), href: '/about' },
     ],
     company: [
-      { name: t('footer.aboutUs'), href: '/about' },
-      { name: t('nav.contact'), href: '/contact' },
-      { name: t('nav.faq'), href: '/faq' },
+      { name: t('footer.privacyPolicy'), href: '/privacy' },
+      { name: t('footer.termsConditions'), href: '/terms' },
+      { name: 'Track Order', href: '/track-order' },
     ],
     support: [
       { name: t('footer.shippingInfo'), href: '/shipping' },
@@ -60,8 +59,8 @@ export function Footer() {
   const fullAddress = [storeAddress, storeCity].filter(Boolean).join(', ');
 
   return (
-    <footer className="bg-primary text-primary-foreground">
-      <div className="container-shop section-padding">
+    <footer className="bg-[#111111] text-white pt-16 pb-8 md:pt-20 md:pb-12 mt-12">
+      <div className="container-shop">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
           {/* Brand */}
           <div className="lg:col-span-1">
@@ -181,20 +180,6 @@ export function Footer() {
             <p className="text-sm text-primary-foreground/60">
               {footerText || `© ${new Date().getFullYear()} ${storeName}. ${t('footer.allRightsReserved')}.`}
             </p>
-            <div className="flex gap-6">
-              <Link
-                to="/privacy"
-                className="text-sm text-primary-foreground/60 hover:text-primary-foreground transition-colors"
-              >
-                {t('footer.privacyPolicy')}
-              </Link>
-              <Link
-                to="/terms"
-                className="text-sm text-primary-foreground/60 hover:text-primary-foreground transition-colors"
-              >
-                {t('footer.termsConditions')}
-              </Link>
-            </div>
           </div>
         </div>
       </div>

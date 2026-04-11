@@ -11,9 +11,7 @@ function VisualHeroSection({ section }: { section: HomepageSection }) {
     <section className="relative h-[550px] bg-gradient-to-br from-amber-50 via-orange-50 to-stone-100 flex items-center overflow-hidden">
       <div className="container-shop relative z-10">
         <div className="max-w-lg">
-          <p className="text-sm uppercase tracking-widest text-amber-700 mb-3">Premium Collection</p>
           <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight text-stone-900">{section.title}</h1>
-          <p className="text-lg text-stone-600 mb-6">{section.subtitle}</p>
           <Link to="/shop" className="inline-flex items-center gap-2 bg-stone-900 text-white px-8 py-3 rounded-lg font-medium hover:bg-stone-800 transition-colors">
             Explore Collection <ArrowRight className="h-4 w-4" />
           </Link>
@@ -104,7 +102,6 @@ function MaterialHighlightSection({ section }: { section: HomepageSection }) {
             >
               <span className="text-4xl">{m.emoji}</span>
               <h3 className="font-semibold mt-3">{m.name}</h3>
-              <p className="text-sm text-muted-foreground">{m.desc}</p>
             </div>
           ))}
         </div>

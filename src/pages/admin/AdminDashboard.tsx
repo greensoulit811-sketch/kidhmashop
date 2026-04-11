@@ -49,7 +49,8 @@ export default function AdminDashboard() {
             </div>
           </div>
         </Link>
-        <Link to="/admin/categories" className="bg-card rounded-xl border border-border p-4 hover:border-accent transition-colors">
+        {/* Categories stat hidden for single-product store */}
+        {/* <Link to="/admin/categories" className="bg-card rounded-xl border border-border p-4 hover:border-accent transition-colors">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center">
               <FolderOpen className="h-5 w-5 text-purple-600" />
@@ -59,7 +60,7 @@ export default function AdminDashboard() {
               <p className="text-xs text-muted-foreground">Categories</p>
             </div>
           </div>
-        </Link>
+        </Link> */}
         <Link to="/admin/orders" className="bg-card rounded-xl border border-border p-4 hover:border-accent transition-colors">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center">

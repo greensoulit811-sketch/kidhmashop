@@ -29,7 +29,10 @@
     "seeMore": "See More",
     "showLess": "Show Less",
     "noResults": "No results found",
-    "language": "Language"
+    "language": "Language",
+    "customerReviews": "Customer Reviews",
+    "pageNotFound": "Page Not Found",
+    "goHome": "Go Home"
   },
   "nav": {
     "home": "Home",

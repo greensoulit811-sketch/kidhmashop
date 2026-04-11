@@ -12,9 +12,7 @@ function HeroBannerSection({ section }: { section: HomepageSection }) {
     <section className="relative h-[500px] bg-gradient-to-r from-pink-100 via-rose-50 to-purple-100 flex items-center">
       <div className="container-shop relative z-10">
         <div className="max-w-lg">
-          <p className="text-sm uppercase tracking-widest text-pink-600 mb-3">Premium Beauty</p>
           <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">{section.title}</h1>
-          <p className="text-lg text-muted-foreground mb-6">{section.subtitle}</p>
           <Link to="/shop" className="inline-flex items-center gap-2 bg-pink-600 text-white px-8 py-3 rounded-full font-medium hover:bg-pink-700 transition-colors">
             Shop Now <ArrowRight className="h-4 w-4" />
           </Link>
@@ -129,7 +127,6 @@ function IngredientSection({ section }: { section: HomepageSection }) {
             >
               <span className="text-4xl">{ing.emoji}</span>
               <h3 className="font-semibold mt-3">{ing.name}</h3>
-              <p className="text-sm text-muted-foreground">{ing.desc}</p>
             </div>
           ))}
         </div>

@@ -54,14 +54,10 @@ export default function OrderSuccessPage() {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link to="/shop">
-              <Button className="btn-accent">
-                {t('cart.continueShopping')}
-                <ArrowRight className="h-4 w-4 ml-2" />
-              </Button>
-            </Link>
             <Link to="/">
-              <Button variant="outline">{t('common.back')} {t('nav.home')}</Button>
+              <Button className="border border-[#e6007e] text-[#e6007e] bg-white hover:bg-[#e6007e]/5 h-12 px-8 font-semibold rounded-sm">
+                {t('common.back')}
+              </Button>
             </Link>
           </div>
         </div>

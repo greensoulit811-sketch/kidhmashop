@@ -89,13 +89,23 @@ export const useCreateReview = () => {
       order_id?: string;
       user_id?: string;
     }) => {
+      const insertData: any = {
+        product_id: review.product_id,
+        name: review.name,
+        rating: review.rating,
+        text: review.text,
+      };
+
+      if (review.order_id !== undefined) {
+        insertData.order_id = review.order_id;
+      }
+      if (review.user_id !== undefined) {
+        insertData.user_id = review.user_id;
+      }
+
       const { data, error } = await supabase
         .from('reviews')
-        .insert({
-          name: review.name,
-          rating: review.rating,
-          text: review.text,
-        } as any)
+        .insert(insertData)
         .select()
         .single();
       
@@ -155,6 +165,103 @@ export const useDeleteReview = () => {
     },
     onError: (error: Error) => {
       toast.error('Failed to delete review: ' + error.message);
+    },
+  });
+};
+
+export const useUpdateReview = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: async (review: {
+      id: string;
+      name?: string;
+      rating?: number;
+      text?: string;
+      is_approved?: boolean;
+      verified_purchase?: boolean;
+    }) => {
+      const { data, error } = await supabase
+        .from('reviews')
+        .update({
+          ...(review.name !== undefined && { name: review.name }),
+          ...(review.rating !== undefined && { rating: review.rating }),
+          ...(review.text !== undefined && { text: review.text }),
+          ...(review.is_approved !== undefined && { is_approved: review.is_approved }),
+          ...(review.verified_purchase !== undefined && { verified_purchase: review.verified_purchase }),
+        })
+        .eq('id', review.id)
+        .select()
+        .single();
+      
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['product_reviews'] });
+      queryClient.invalidateQueries({ queryKey: ['all_reviews'] });
+      queryClient.invalidateQueries({ queryKey: ['reviews'] });
+      toast.success('Review updated');
+    },
+    onError: (error: Error) => {
+      toast.error('Failed to update review: ' + error.message);
+    },
+  });
+};
+
+export const useCreateAdminReview = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: async (review: {
+      product_id?: string;
+      name: string;
+      rating: number;
+      text: string;
+      is_approved?: boolean;
+      verified_purchase?: boolean;
+      user_id?: string;
+      order_id?: string;
+    }) => {
+      const insertData: any = {
+        name: review.name,
+        rating: review.rating,
+        text: review.text,
+      };
+
+      if (review.is_approved !== undefined) {
+        insertData.is_approved = review.is_approved;
+      }
+      if (review.verified_purchase !== undefined) {
+        insertData.verified_purchase = review.verified_purchase;
+      }
+      if (review.product_id !== undefined) {
+        insertData.product_id = review.product_id;
+      }
+      if (review.user_id !== undefined) {
+        insertData.user_id = review.user_id;
+      }
+      if (review.order_id !== undefined) {
+        insertData.order_id = review.order_id;
+      }
+
+      const { data, error } = await supabase
+        .from('reviews')
+        .insert(insertData)
+        .select()
+        .single();
+      
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['product_reviews'] });
+      queryClient.invalidateQueries({ queryKey: ['all_reviews'] });
+      queryClient.invalidateQueries({ queryKey: ['reviews'] });
+      toast.success('Review created');
+    },
+    onError: (error: Error) => {
+      toast.error('Failed to create review: ' + error.message);
     },
   });
 };

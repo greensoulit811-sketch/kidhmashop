@@ -21,6 +21,7 @@ import {
   FileText,
   Megaphone,
   LayoutTemplate,
+  Play,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -44,19 +45,19 @@ export default function AdminLayout() {
   const allItems = [
     { name: t('admin.dashboard'), href: '/admin', icon: LayoutDashboard, roles: ['admin', 'manager', 'order_handler'] },
     { name: t('admin.products'), href: '/admin/products', icon: Package, roles: ['admin', 'manager'] },
-    { name: t('admin.categories'), href: '/admin/categories', icon: FolderOpen, roles: ['admin', 'manager'] },
+    // { name: t('admin.categories'), href: '/admin/categories', icon: FolderOpen, roles: ['admin', 'manager'] },
     { name: t('admin.orders'), href: '/admin/orders', icon: ShoppingCart, roles: ['admin', 'manager', 'order_handler'] },
     { name: 'Checkout Leads', href: '/admin/leads', icon: Users, roles: ['admin', 'manager'] },
-    { name: t('admin.slider'), href: '/admin/slider', icon: Image, roles: ['admin', 'manager'] },
-    { name: 'Coupons', href: '/admin/coupons', icon: Tag, roles: ['admin', 'manager'] },
-    { name: 'Shipping Zones', href: '/admin/shipping', icon: MapPin, roles: ['admin'] },
-    { name: 'Shipping Methods', href: '/admin/shipping-methods', icon: Truck, roles: ['admin'] },
+    // { name: t('admin.slider'), href: '/admin/slider', icon: Image, roles: ['admin', 'manager'] },
+    // { name: 'Coupons', href: '/admin/coupons', icon: Tag, roles: ['admin', 'manager'] },
+    // { name: 'Shipping Zones', href: '/admin/shipping', icon: MapPin, roles: ['admin'] },
+    // { name: 'Shipping Methods', href: '/admin/shipping-methods', icon: Truck, roles: ['admin'] },
     { name: 'Reviews', href: '/admin/reviews', icon: MessageSquare, roles: ['admin', 'manager'] },
     { name: 'Courier', href: '/admin/courier', icon: Truck, roles: ['admin'] },
     { name: 'Payment Methods', href: '/admin/payment-methods', icon: CreditCard, roles: ['admin'] },
-    { name: 'Pages', href: '/admin/pages', icon: FileText, roles: ['admin'] },
+    // { name: 'Pages', href: '/admin/pages', icon: FileText, roles: ['admin'] },
     { name: 'Landing Pages', href: '/admin/landing-pages', icon: Megaphone, roles: ['admin'] },
-    { name: 'Homepage', href: '/admin/homepage', icon: LayoutTemplate, roles: ['admin'] },
+    // { name: 'Homepage', href: '/admin/homepage', icon: LayoutTemplate, roles: ['admin'] },
     { name: 'Users', href: '/admin/users', icon: ShieldCheck, roles: ['admin'] },
     { name: t('admin.settings'), href: '/admin/settings', icon: Settings, roles: ['admin'] },
   ];

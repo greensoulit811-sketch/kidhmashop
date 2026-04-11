@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ShoppingBag, Zap, Loader2 } from 'lucide-react';
+import { ShoppingBag, Zap, Loader2, Star, Clock } from 'lucide-react';
 import { Product, Category } from '@/hooks/useShopData';
 import { useCart } from '@/contexts/CartContext';
 import { useSiteSettings } from '@/contexts/SiteSettingsContext';
@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 
 interface ProductCardProps {
   product: Product & { category?: Category | null };
+  isFlashSale?: boolean;
 }
 
 export function ProductCard({ product }: ProductCardProps) {
@@ -80,10 +81,10 @@ export function ProductCard({ product }: ProductCardProps) {
     : 0;
 
   return (
-    <div className="group bg-card rounded-2xl border border-border/60 flex flex-col h-full overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-foreground/5 hover:border-border">
+    <div className="group product-card-flash-sale flex flex-col h-full transition-all duration-300">
       <Link to={`/product/${product.slug}`} className="block flex-1">
         {/* Image */}
-        <div className="relative aspect-[5/5] overflow-hidden bg-secondary/50">
+        <div className="relative aspect-square overflow-hidden bg-transparent">
           <img
             src={product.images[0] || '/placeholder.svg'}
             alt={product.name}
@@ -91,81 +92,57 @@ export function ProductCard({ product }: ProductCardProps) {
             loading="lazy"
           />
 
-          {/* Badges */}
-          <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
-            {product.is_new && (
-              <span className="bg-primary text-primary-foreground px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider rounded-md">
-                {t('product.new')}
-              </span>
-            )}
-            {hasDiscount && (
-              <span className="bg-destructive text-destructive-foreground px-2.5 py-1 text-[10px] font-bold rounded-md">
-                -{discountPercent}%
-              </span>
-            )}
+          {/* Hover Icon */}
+          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/5 z-20">
+            <div className="bg-white p-2 rounded-full shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+              <ShoppingBag className="w-5 h-5 text-[#e6007e]" />
+            </div>
           </div>
 
-          {/* Wishlist Button */}
-          <div className="absolute top-3 right-3 z-10">
-            <WishlistButton productId={product.id} size="sm" className="bg-background/90 backdrop-blur-sm shadow-sm border-0" />
+          {/* Flash Sale Badge */}
+          <div className="absolute top-2 left-2 z-10">
+            {hasDiscount && (
+              <span className="flash-sale-badge">
+                -{discountPercent}% OFF
+              </span>
+            )}
           </div>
         </div>
 
         {/* Content */}
-        <div className="px-3 py-2 sm:px-4 sm:py-4">
-          <p className="text-[11px] text-muted-foreground mb-1 uppercase tracking-widest font-medium">
-            {product.category?.name || t('product.uncategorized')}
-          </p>
-          <h3 className="font-semibold text-sm line-clamp-1 sm:line-clamp-2 mb-2 group-hover:text-primary transition-colors leading-snug">
+        <div className="px-3 text-center mt-4">
+          <h3 className="text-[11px] md:text-[16px] font-medium line-clamp-2 mb-2 min-h-[20px] text-foreground/80 leading-snug">
             {product.name}
           </h3>
-          <div className="flex items-baseline gap-2">
-            {hasDiscount ? (
-              <>
-                <span className="font-bold text-primary text-base">
-                  {formatCurrency(product.sale_price!)}
-                </span>
-                <span className="text-xs text-muted-foreground line-through">
-                  {formatCurrency(product.price)}
-                </span>
-              </>
-            ) : (
-              <span className="font-bold text-base">{formatCurrency(product.price)}</span>
+          
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <span className="font-bold text-[#e6007e] text-base">
+              ৳{product.sale_price || product.price}
+            </span>
+            {hasDiscount && (
+              <span className="text-base text-muted-foreground line-through">
+                ৳{product.price}
+              </span>
             )}
           </div>
         </div>
       </Link>
 
       {/* Action Buttons */}
-      <div className="px-3 pb-3 mt-auto flex flex-col gap-1.5 sm:px-4 sm:pb-4 sm:gap-2">
+      <div className="px-2 pb-3 mt-auto flex flex-col gap-1.5">
         <Button
-          variant="outline"
-          size="sm"
-          className="w-full h-9 sm:h-11 text-xs sm:text-sm font-medium rounded-lg border-border hover:border-primary hover:bg-primary/5 transition-all gap-1.5 sm:gap-2"
-          onClick={handleAddToCart}
-          disabled={isAddingToCart || product.stock === 0}
-          aria-label={product.has_variants ? 'Select Options' : t('product.addToCart')}
-        >
-          {isAddingToCart ? (
-            <Loader2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 animate-spin" />
-          ) : (
-            <ShoppingBag className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-          )}
-          {product.has_variants ? 'Options' : t('product.addToCart')}
-        </Button>
-        <Button
-          size="sm"
-          className="btn-accent w-full h-9 sm:h-11 text-xs sm:text-sm font-semibold rounded-lg shadow-sm hover:shadow-md transition-all gap-1.5 sm:gap-2"
+          className="btn-buy-now h-7 md:h-8"
           onClick={handleBuyNow}
           disabled={isBuyingNow || product.stock === 0}
-          aria-label={t('product.buyNow')}
         >
-          {isBuyingNow ? (
-            <Loader2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 animate-spin" />
-          ) : (
-            <Zap className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-          )}
-          {t('product.buyNow')}
+          {isBuyingNow ? <Loader2 className="h-3 w-3 animate-spin" /> : 'অর্ডার করুন'}
+        </Button>
+        <Button
+          className="btn-view h-7 md:h-8 text-primary"
+          onClick={handleAddToCart}
+          disabled={isAddingToCart || product.stock === 0}
+        >
+          {isAddingToCart ? <Loader2 className="h-3 w-3 animate-spin" /> : 'যোগ করুন'}
         </Button>
       </div>
     </div>

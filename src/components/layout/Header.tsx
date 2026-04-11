@@ -25,22 +25,21 @@ export function Header() {
 
   const navigation = [
     { name: t('nav.home'), href: '/' },
-    { name: t('nav.shop'), href: '/shop' },
-    { name: t('nav.categories'), href: '/categories' },
-    { name: t('nav.about'), href: '/about' },
+    // { name: t('nav.shop'), href: '/shop' },
+    // { name: t('nav.categories'), href: '/categories' },
+    // { name: t('nav.about'), href: '/about' },
     { name: t('nav.contact'), href: '/contact' },
   ];
 
   const languageOptions = [
     { code: 'en', label: 'English' },
-    { code: 'hi', label: 'हिन्दी' },
     { code: 'bn', label: 'বাংলা' },
   ];
 
   return (
-    <header className="header-sticky">
+    <header className="sticky top-0 z-50 w-full bg-white border-b border-gray-100 shadow-sm">
       <div className="container-shop">
-        <div className="flex items-center justify-between h-18 md:h-24">
+        <div className="flex items-center justify-between h-16 md:h-20">
           {/* Mobile menu */}
           <Sheet>
             <SheetTrigger asChild className="md:hidden">
@@ -55,11 +54,10 @@ export function Header() {
                   <Link
                     key={item.href}
                     to={item.href}
-                    className={`text-xl font-semibold transition-colors hover:text-accent ${
-                      location.pathname === item.href
+                    className={`text-xl font-semibold transition-colors hover:text-accent ${location.pathname === item.href
                         ? 'text-accent'
                         : 'text-foreground'
-                    }`}
+                      }`}
                   >
                     {item.name}
                   </Link>
@@ -78,9 +76,9 @@ export function Header() {
           {/* Logo */}
           <Link to="/" className="flex items-center">
             {storeLogo ? (
-              <img 
-                src={storeLogo} 
-                alt={storeName} 
+              <img
+                src={storeLogo}
+                alt={storeName}
                 className="h-12 md:h-14 w-auto object-contain"
               />
             ) : (
@@ -96,11 +94,10 @@ export function Header() {
               <Link
                 key={item.href}
                 to={item.href}
-                className={`text-lg font-semibold tracking-wide uppercase transition-colors hover:text-accent ${
-                  location.pathname === item.href
+                className={`text-lg font-semibold tracking-wide transition-colors hover:text-accent ${location.pathname === item.href
                     ? 'text-accent'
                     : 'text-foreground'
-                }`}
+                  }`}
               >
                 {item.name}
               </Link>
@@ -109,7 +106,7 @@ export function Header() {
 
           {/* Actions */}
           <div className="flex items-center gap-2">
-            <Button
+            {/* <Button
               variant="ghost"
               size="icon"
               onClick={() => setIsSearchOpen(!isSearchOpen)}
@@ -117,7 +114,7 @@ export function Header() {
             >
               <Search className="h-6 w-6" />
               <span className="sr-only">{t('common.search')}</span>
-            </Button>
+            </Button> */}
 
             {/* Language Switcher */}
             <DropdownMenu>
@@ -147,7 +144,7 @@ export function Header() {
               </Button>
             </Link>
 
-            <Link to="/cart" className="relative">
+            {/* <Link to="/cart" className="relative">
               <Button variant="ghost" size="icon" className="h-10 w-10">
                 <ShoppingBag className="h-7 w-7" />
                 {totalItems > 0 && (
@@ -155,7 +152,7 @@ export function Header() {
                 )}
                 <span className="sr-only">{t('common.cart')}</span>
               </Button>
-            </Link>
+            </Link> */}
           </div>
         </div>
 

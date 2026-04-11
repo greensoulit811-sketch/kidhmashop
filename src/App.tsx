@@ -15,16 +15,13 @@ import { DynamicFavicon } from "@/components/DynamicFavicon";
 import { WhatsAppWidget } from "@/components/WhatsAppWidget";
 // Store pages
 import Index from "./pages/Index";
-import ShopPage from "./pages/ShopPage";
-import CategoriesPage from "./pages/CategoriesPage";
-import CategoryPage from "./pages/CategoryPage";
+// import ShopPage from "./pages/ShopPage";
 import ProductDetailsPage from "./pages/ProductDetailsPage";
 import CartPage from "./pages/CartPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import OrderSuccessPage from "./pages/OrderSuccessPage";
 import ContactPage from "./pages/ContactPage";
 import AboutPage from "./pages/AboutPage";
-import FAQPage from "./pages/FAQPage";
 import PrivacyPage from "./pages/PrivacyPage";
 import TermsPage from "./pages/TermsPage";
 import NotFound from "./pages/NotFound";
@@ -81,16 +78,13 @@ const App = () => (
                   <Routes>
                     {/* Public Store Routes - No auth required */}
                     <Route path="/" element={<Index />} />
-                    <Route path="/shop" element={<ShopPage />} />
-                    <Route path="/categories" element={<CategoriesPage />} />
-                    <Route path="/category/:slug" element={<CategoryPage />} />
+                    {/* <Route path="/shop" element={<ShopPage />} /> */}
                     <Route path="/product/:slug" element={<ProductDetailsPage />} />
                     <Route path="/cart" element={<CartPage />} />
                     <Route path="/checkout" element={<CheckoutPage />} />
                     <Route path="/order-success" element={<OrderSuccessPage />} />
                     <Route path="/contact" element={<ContactPage />} />
                     <Route path="/about" element={<AboutPage />} />
-                    <Route path="/faq" element={<FAQPage />} />
                     <Route path="/privacy" element={<PrivacyPage />} />
                     <Route path="/terms" element={<TermsPage />} />
                     <Route path="/track-order" element={<TrackOrderPage />} />

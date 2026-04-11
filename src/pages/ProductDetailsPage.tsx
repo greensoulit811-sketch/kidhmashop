@@ -14,6 +14,7 @@ import { useProductReviews } from '@/hooks/useProductReviews';
 import { useCart } from '@/contexts/CartContext';
 import { useSiteSettings } from '@/contexts/SiteSettingsContext';
 import { Button } from '@/components/ui/button';
+import { AspectRatio } from '@/components/ui/aspect-ratio';
 import { toast } from 'sonner';
 import { trackViewContent, trackAddToCart } from '@/lib/facebook-pixel';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -439,7 +440,7 @@ export default function ProductDetailsPage() {
                 </Button>
                 <Button
                   size="lg"
-                  className="btn-accent w-full h-12 rounded-lg font-semibold text-sm shadow-sm hover:shadow-md transition-all gap-2"
+                  className="btn-buy-now w-full h-12 rounded-lg font-semibold text-sm shadow-sm hover:shadow-md transition-all gap-2"
                   onClick={handleBuyNow}
                   disabled={isBuyingNow || effectiveStock === 0 || (hasVariants && !selectedVariant)}
                 >
@@ -529,18 +530,21 @@ export default function ProductDetailsPage() {
                   REVIEWS ({reviews.length})
                 </AccordionTrigger>
                 <AccordionContent className="px-5 pb-5">
-                  <div className="mb-5">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="rounded-lg font-medium"
-                      onClick={() => setShowReviewForm(!showReviewForm)}
-                    >
-                      {showReviewForm ? 'Cancel' : 'Write a Review'}
-                    </Button>
+                  {/* Write a Review Section */}
+                  <div className="border-t border-border/40 pt-6">
+                    <div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="rounded-lg font-medium"
+                        onClick={() => setShowReviewForm(!showReviewForm)}
+                      >
+                        {showReviewForm ? 'Cancel' : 'Write a Review'}
+                      </Button>
+                    </div>
                   </div>
                   {showReviewForm && (
-                    <div className="bg-secondary/40 rounded-xl p-5 mb-5 border border-border/40">
+                    <div className="bg-secondary/40 rounded-xl p-5 mb-5 border border-border/40 mt-5">
                       <ReviewForm
                         productId={product.id}
                         productName={product.name}
@@ -590,7 +594,7 @@ export default function ProductDetailsPage() {
               {t('product.addToCart')}
             </Button>
             <Button
-              className="btn-accent w-full h-11 text-sm font-semibold rounded-lg shadow-sm gap-2"
+              className="btn-buy-now w-full h-11 text-sm font-semibold rounded-lg shadow-sm gap-2"
               onClick={handleBuyNow}
               disabled={isBuyingNow || effectiveStock === 0 || (hasVariants && !selectedVariant)}
               aria-label={t('product.buyNow')}

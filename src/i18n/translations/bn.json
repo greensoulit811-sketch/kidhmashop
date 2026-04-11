@@ -32,7 +32,10 @@
     "language": "ভাষা",
     "howToUse": "কিভাবে ব্যবহার করবেন",
     "ordering": "অর্ডার করছেন",
-    "ourProducts": "আমাদের পণ্যসমূহ"
+    "ourProducts": "আমাদের পণ্যসমূহ",
+    "customerReviews": "ক্রেতাদের মতামত",
+    "pageNotFound": "পৃষ্ঠা পাওয়া যায়নি",
+    "goHome": "হোমে ফিরে যান"
   },
   "nav": {
     "products": "আমাদের পণ্যসমূহ",

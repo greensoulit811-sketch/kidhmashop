@@ -15,9 +15,7 @@ function FeaturedHeroSection({ section }: { section: HomepageSection }) {
       <div className="container-shop">
         <div className="grid md:grid-cols-2 gap-8 items-center">
           <div>
-            <p className="text-blue-400 text-sm uppercase tracking-widest mb-2">Featured</p>
             <h1 className="text-3xl md:text-5xl font-bold mb-4">{section.title}</h1>
-            <p className="text-slate-300 mb-6">{section.subtitle}</p>
             {featured && (
               <div className="space-y-3">
                 <h2 className="text-xl font-semibold">{featured.name}</h2>

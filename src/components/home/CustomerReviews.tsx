@@ -20,9 +20,6 @@ export function CustomerReviews() {
       <div className="container-shop">
         <div className={`text-center mb-12 reveal-base ${isVisible ? 'reveal-visible' : ''}`}>
           <h2 className="text-2xl md:text-3xl font-bold">What Our Customers Say</h2>
-          <p className="text-primary-foreground/70 mt-2">
-            Real reviews from real customers
-          </p>
         </div>
 
         <Carousel

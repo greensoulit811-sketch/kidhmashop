@@ -17,6 +17,12 @@ export interface LandingPage {
   hero_subtitle: string | null;
   hero_image: string | null;
   hero_cta_text: string;
+  video_url?: string | null;
+  video_section_title?: string | null;
+  video_bottom_title?: string | null;
+  banner_old_price?: string | null;
+  banner_new_price?: string | null;
+  show_banner?: boolean;
   product_ids: string[];
   how_to_use_cards: HowToUseCard[];
   show_reviews: boolean;
@@ -35,6 +41,7 @@ export const useLandingPages = () => {
       if (error) throw error;
       return (data || []).map(d => ({
         ...d,
+        video_url: (d.video_url as string) || null,
         how_to_use_cards: (d.how_to_use_cards as any) || [],
       })) as LandingPage[];
     },
@@ -54,6 +61,7 @@ export const useLandingPage = (slug: string) => {
       if (!data) return null;
       return {
         ...data,
+        video_url: (data.video_url as string) || null,
         how_to_use_cards: (data.how_to_use_cards as any) || [],
       } as LandingPage;
     },
