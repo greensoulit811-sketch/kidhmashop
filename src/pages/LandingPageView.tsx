@@ -450,6 +450,8 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
             </p>
           )}
 
+          <h2>habiganj polytechnic institute</h2>
+
           <form onSubmit={handleSubmit} className="space-y-6">
             {selectedProduct && (
               <div className="bg-card border border-border rounded-xl p-4 flex items-center gap-4">
