@@ -19,16 +19,36 @@ import { Layout } from '@/components/layout/Layout';
 const getVideoEmbedUrl = (url: string) => {
   const value = url.trim();
   if (!value) return '';
+  
+  // YouTube
   if (value.includes('youtube.com/embed/')) return value;
   if (value.includes('youtube.com/watch') || value.includes('youtu.be/')) {
     const match = value.match(/(?:v=|youtu\.be\/)([A-Za-z0-9_-]{11})/);
     if (match?.[1]) return `https://www.youtube.com/embed/${match[1]}`;
   }
+  
+  // Vimeo
   if (value.includes('vimeo.com/')) {
     const match = value.match(/vimeo\.com\/(\d+)/);
     if (match?.[1]) return `https://player.vimeo.com/video/${match[1]}`;
   }
+
+  // Google Drive
+  if (value.includes('drive.google.com')) {
+    const match = value.match(/\/d\/(.+?)\/(view|edit|preview)?/);
+    if (match && match[1]) {
+      return `https://drive.google.com/file/d/${match[1]}/preview`;
+    }
+  }
+  
   return value;
+};
+
+const isDirectVideo = (url: string) => {
+  const value = url.trim().toLowerCase();
+  // Don't treat drive links as direct video (requires iframe)
+  if (value.includes('drive.google.com')) return false;
+  return value.endsWith('.mp4') || value.endsWith('.webm') || value.endsWith('.ogg') || value.includes('supabase.co/storage/v1/object/public/');
 };
 
 // Fetch products by IDs
@@ -70,7 +90,7 @@ const PricingBanner = ({ oldPrice, newPrice }: { oldPrice: string; newPrice: str
       {/* Frame */}
       <div className="absolute inset-4 md:inset-6 border-[2px] border-dashed border-[#bef264]/40 rounded-xl" />
       
-      <div className="relative z-10 text-center flex flex-col items-center justify-center space-y-8 px-6 max-w-6xl mx-auto">
+      <div className="relative z-10 text-center flex flex-col items-center justify-center space-y-8 px-6 w-full">
         {/* Old Price */}
         <div className="text-xl md:text-3xl font-bold text-white/80 tracking-widest flex items-center justify-center gap-3">
           <span className="relative inline-block px-4 py-2">
@@ -262,51 +282,56 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
       <section
-        className="relative min-h-[70vh] flex items-center justify-center text-center py-20 px-4"
+        className="relative min-h-[50vh] md:min-h-[75vh] flex items-center justify-center text-center py-20 px-4"
         style={{
           backgroundImage: page.hero_image ? `url(${page.hero_image})` : undefined,
-          backgroundSize: 'cover',
+          backgroundSize: '100% 100%',
           backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat'
         }}
       >
         {page.hero_image && <div className="absolute inset-0 bg-black/50" />}
-        <div className="relative z-10 max-w-3xl mx-auto">
-          <h1 className={`text-4xl md:text-6xl font-black mb-6 leading-tight ${page.hero_image ? 'text-white' : 'text-foreground'}`}>
-            {page.hero_title}
-          </h1>
-          {page.hero_subtitle && (
-            <p className={`text-xl md:text-2xl mb-12 ${page.hero_image ? 'text-white/90' : 'text-muted-foreground'}`}>
-              {page.hero_subtitle}
-            </p>
-          )}
-          <Button size="lg" className="btn-accent text-xl px-12 py-8 min-w-[280px]" onClick={scrollToCheckout}>
+        <div className="relative z-10 w-full max-w-4xl mx-auto px-4 flex justify-center mt-10">
+          <Button 
+            size="lg" 
+            className="btn-accent text-lg md:text-2xl px-4 md:px-12 py-3 md:py-4 h-auto min-h-[64px] rounded-full w-full sm:w-[450px] shadow-2xl shadow-accent/30 hover:scale-105 transition-all duration-300 whitespace-normal leading-tight flex items-center justify-center border-none" 
+            onClick={scrollToCheckout}
+          >
             {page.hero_cta_text}
-            <ChevronDown className="ml-2 h-5 w-5" />
+            {/* <ChevronDown className="ml-2 h-6 w-6 md:h-8 md:w-8 shrink-0" /> */}
           </Button>
         </div>
       </section>
 
       {page.video_url && (
         <section className="py-12 md:py-16 px-4 bg-secondary/10">
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl md:text-5xl font-bold text-center mb-10 leading-tight">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-lg md:text-5xl font-bold text-center mb-10 leading-tight">
               {page.video_section_title || t('landingPage.videoOverview') || 'Watch the Video'}
             </h2>
             <div className="rounded-3xl overflow-hidden border-[6px] border-[#22C55E] shadow-2xl transition-all hover:scale-[1.01] duration-500">
               <div className="aspect-video bg-black">
-                <iframe
-                  src={getVideoEmbedUrl(page.video_url)}
-                  title={page.hero_title + ' video'}
-                  className="w-full h-full"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                />
+                {isDirectVideo(page.video_url) ? (
+                  <video
+                    src={page.video_url}
+                    controls
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <iframe
+                    src={getVideoEmbedUrl(page.video_url)}
+                    title={page.hero_title + ' video'}
+                    className="w-full h-full"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                )}
               </div>
             </div>
             
             {page.video_bottom_title && (
               <div className="mt-12 text-center">
-                <p className="text-2xl md:text-4xl font-extrabold text-foreground leading-snug px-4">
+                <p className="text-lg md:text-4xl font-extrabold text-foreground leading-snug px-4">
                   {page.video_bottom_title.split(/(\[\[.*?\]\])/).map((part, i) => {
                     if (part.startsWith('[[') && part.endsWith(']]')) {
                       return (
@@ -321,10 +346,10 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
               </div>
             )}
 
-            <div className="mt-12 text-center">
+            <div className="mt-12 text-center px-4 flex justify-center">
               <Button 
                 size="lg" 
-                className="btn-accent text-2xl px-16 py-10 rounded-full shadow-2xl hover:shadow-accent/40 hover:scale-105 transition-all duration-300"
+                className="btn-accent text-lg md:text-2xl px-8 md:px-12 py-5 md:py-4 h-auto min-h-[64px] rounded-full w-full sm:w-[450px] shadow-2xl shadow-accent/30 hover:scale-105 transition-all duration-300 whitespace-normal leading-tight border-none"
                 onClick={scrollToCheckout}
               >
                 {page.hero_cta_text}
@@ -370,7 +395,7 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
                         <span className="text-sm text-muted-foreground line-through">{formatCurrency(product.price)}</span>
                       )}
                     </div>
-                    <Button className="btn-accent w-full mt-3 py-6 text-lg" onClick={(e) => { e.stopPropagation(); setSelectedProduct(product); setQuantity(1); scrollToCheckout(); }}>
+                    <Button className="btn-accent w-full mt-3 py-4 md:py-4 text-lg h-auto whitespace-normal leading-tight" onClick={(e) => { e.stopPropagation(); setSelectedProduct(product); setQuantity(1); scrollToCheckout(); }}>
                       {page.hero_cta_text}
                     </Button>
                   </div>
@@ -404,7 +429,7 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
               ))}
             </div>
             <div className="text-center mt-8">
-              <Button size="lg" className="btn-accent text-xl px-12 py-8" onClick={scrollToCheckout}>
+              <Button size="lg" className="btn-accent text-xl px-8 py-8" onClick={scrollToCheckout}>
                 {page.hero_cta_text}
               </Button>
             </div>
@@ -429,8 +454,12 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
                 </div>
               ))}
             </div>
-            <div className="text-center mt-8">
-              <Button size="lg" className="btn-accent text-xl px-12 py-8" onClick={scrollToCheckout}>
+            <div className="text-center mt-12 px-4 flex justify-center">
+              <Button 
+                size="lg" 
+                className="btn-accent text-lg md:text-2xl px-8 md:px-12 py-5 md:py-4 h-auto min-h-[64px] rounded-full w-full sm:w-[450px] shadow-2xl shadow-accent/30 hover:scale-105 transition-all duration-300 whitespace-normal leading-tight border-none" 
+                onClick={scrollToCheckout}
+              >
                 {page.hero_cta_text}
               </Button>
             </div>
@@ -449,8 +478,6 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
               {t('common.ordering') || 'Ordering'}: <span className="font-semibold text-foreground underline decoration-[#22C55E] decoration-4 underline-offset-8">{selectedProduct.name}</span>
             </p>
           )}
-
-          <h2>habiganj polytechnic institute</h2>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             {selectedProduct && (

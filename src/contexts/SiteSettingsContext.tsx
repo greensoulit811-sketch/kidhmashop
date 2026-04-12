@@ -102,7 +102,7 @@ const defaultSettings: SiteSettings = {
   currency_code: 'BDT',
   currency_symbol: '৳',
   currency_locale: 'bn-BD',
-  language: 'en',
+  language: 'bn',
   updated_at: new Date().toISOString(),
   fb_pixel_enabled: false,
   fb_pixel_id: null,
@@ -260,8 +260,8 @@ export const SiteSettingsProvider: React.FC<{ children: React.ReactNode }> = ({ 
     activeSettings.theme_accent_color,
   ]);
   
-  // User preference overrides global setting
-  const activeLanguage = (userLanguagePreference as 'en' | 'hi' | 'bn') || activeSettings.language;
+  // Force language to Bengali as per user request
+  const activeLanguage = 'bn';
 
   // Translation function
   const t = useCallback((key: string): string => {

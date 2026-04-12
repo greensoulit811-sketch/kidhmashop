@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { ImageUpload } from '@/components/admin/ImageUpload';
+import { VideoUpload } from '@/components/admin/VideoUpload';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Plus, Pencil, Trash2, ExternalLink, X, Copy } from 'lucide-react';
@@ -22,9 +23,9 @@ const emptyForm = (): Omit<LandingPage, 'id' | 'created_at' | 'updated_at'> => (
   hero_title: '',
   hero_subtitle: '',
   hero_image: '',
-  hero_cta_text: 'Order Now',
+  hero_cta_text: 'অর্ডার করুন',
   video_url: '',
-  video_section_title: 'Watch the Video',
+  video_section_title: 'ভিডিওটি দেখুন',
   video_bottom_title: '',
   banner_old_price: '',
   banner_new_price: '',
@@ -62,7 +63,7 @@ export default function AdminLandingPages() {
       hero_image: p.hero_image || '',
       hero_cta_text: p.hero_cta_text,
       video_url: p.video_url || '',
-      video_section_title: p.video_section_title || 'Watch the Video',
+      video_section_title: p.video_section_title || 'ভিডিওটি দেখুন',
       video_bottom_title: p.video_bottom_title || '',
       banner_old_price: p.banner_old_price || '',
       banner_new_price: p.banner_new_price || '',
@@ -153,9 +154,9 @@ export default function AdminLandingPages() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Landing Pages</h1>
+        <h1 className="text-2xl font-bold">ল্যান্ডিং পেজ</h1>
         <Button onClick={openCreate} className="btn-accent">
-          <Plus className="h-4 w-4 mr-2" /> Create Landing Page
+          <Plus className="h-4 w-4 mr-2" /> পেজ তৈরি করুন
         </Button>
       </div>
 
@@ -224,89 +225,89 @@ export default function AdminLandingPages() {
           <div className="space-y-6">
             {/* Basic Info */}
             <div className="space-y-4">
-              <h3 className="font-semibold text-sm text-muted-foreground uppercase">Basic Info</h3>
+              <h3 className="font-semibold text-sm text-muted-foreground uppercase">সাধারণ তথ্য</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium mb-1">Page Title *</label>
+                  <label className="block text-sm font-medium mb-1">পেজ টাইটেল *</label>
                   <Input value={form.title} onChange={e => handleTitleChange(e.target.value)} />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">URL Slug</label>
+                  <label className="block text-sm font-medium mb-1">URL স্ল্যাগ</label>
                   <Input value={form.slug} onChange={e => setForm(prev => ({ ...prev, slug: e.target.value }))} />
                   <p className="text-xs text-muted-foreground mt-1">/lp/{form.slug || '...'}</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
                 <Switch checked={form.is_active} onCheckedChange={v => setForm(prev => ({ ...prev, is_active: v }))} />
-                <span className="text-sm">Active</span>
+                <span className="text-sm">অ্যাক্টিভ</span>
               </div>
             </div>
 
             {/* Hero Section */}
             <div className="space-y-4">
-              <h3 className="font-semibold text-sm text-muted-foreground uppercase">Hero Section</h3>
+              <h3 className="font-semibold text-sm text-muted-foreground uppercase">হিরো সেকশন</h3>
               <div>
-                <label className="block text-sm font-medium mb-1">Hero Title *</label>
+                <label className="block text-sm font-medium mb-1">হিরো টাইটেল *</label>
                 <Input value={form.hero_title} onChange={e => setForm(prev => ({ ...prev, hero_title: e.target.value }))} />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Hero Subtitle</label>
+                <label className="block text-sm font-medium mb-1">হিরো সাবটাইটেল</label>
                 <Input value={form.hero_subtitle || ''} onChange={e => setForm(prev => ({ ...prev, hero_subtitle: e.target.value }))} />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Hero Image</label>
+                <label className="block text-sm font-medium mb-1">হিরো ইমেজ</label>
                 <ImageUpload value={form.hero_image || ''} onChange={v => setForm(prev => ({ ...prev, hero_image: v }))} folder="landing-pages" />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">CTA Button Text</label>
+                <label className="block text-sm font-medium mb-1">অর্ডার বাটন টেক্সট</label>
                 <Input value={form.hero_cta_text} onChange={e => setForm(prev => ({ ...prev, hero_cta_text: e.target.value }))} />
               </div>
             </div>
 
             {/* Video Section */}
             <div className="space-y-4">
-              <h3 className="font-semibold text-sm text-muted-foreground uppercase">Video Section</h3>
+              <h3 className="font-semibold text-sm text-muted-foreground uppercase">ভিডিও সেকশন</h3>
               <div>
-                <label className="block text-sm font-medium mb-1">Video URL</label>
-                <Input
+                <label className="block text-sm font-medium mb-1">ভিডিও</label>
+                <VideoUpload
                   value={form.video_url || ''}
-                  onChange={e => setForm(prev => ({ ...prev, video_url: e.target.value }))}
-                  placeholder="https://youtu.be/... or https://www.youtube.com/watch?v=..."
+                  onChange={url => setForm(prev => ({ ...prev, video_url: url }))}
+                  folder="landing-pages"
                 />
-                <p className="text-xs text-muted-foreground mt-1">Paste a YouTube or Vimeo link to show a landing page video.</p>
+                <p className="text-xs text-muted-foreground mt-1">ভিডিও ফাইল আপলোড করুন অথবা ইউটিউব/ভিমিও লিংক দিন।</p>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium mb-1">Video Section Title</label>
+                  <label className="block text-sm font-medium mb-1">ভিডিও সেকশন টাইটেল</label>
                   <Input
                     value={form.video_section_title || ''}
                     onChange={e => setForm(prev => ({ ...prev, video_section_title: e.target.value }))}
-                    placeholder="Watch the Video"
+                    placeholder="ভিডিওটি দেখুন"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Nice Title (Below Video)</label>
+                  <label className="block text-sm font-medium mb-1">নিচের ছোট টাইটেল</label>
                   <Input
                     value={form.video_bottom_title || ''}
                     onChange={e => setForm(prev => ({ ...prev, video_bottom_title: e.target.value }))}
-                    placeholder="Use [[text]] for green highlight"
+                    placeholder="[[লেখা]] এটি সবুজ কালার হবে"
                   />
-                  <p className="text-[10px] text-muted-foreground mt-1">Example: All [[7000+ happy]] customers</p>
+                  <p className="text-[10px] text-muted-foreground mt-1">উদাহরণ: সবাই [[৭০০০+ খুশি]] ক্রেতা</p>
                 </div>
               </div>
             </div>
             
             {/* Promotion Banner */}
             <div className="space-y-4">
-              <h3 className="font-semibold text-sm text-muted-foreground uppercase">Promotion Banner</h3>
+              <h3 className="font-semibold text-sm text-muted-foreground uppercase">প্রমোশন ব্যানার</h3>
               <div className="flex items-center gap-2 mb-4">
                 <Switch checked={form.show_banner} onCheckedChange={v => setForm(prev => ({ ...prev, show_banner: v }))} />
-                <span className="text-sm">Show Pricing Banner (below button)</span>
+                <span className="text-sm">প্রাইসিং ব্যানার দেখান (বাটনের নিচে)</span>
               </div>
               {form.show_banner && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 border border-border rounded-lg p-4 bg-secondary/10">
                   <div>
-                    <label className="block text-sm font-medium mb-1">Old Price (e.g. ১২৫০)</label>
+                    <label className="block text-sm font-medium mb-1">আগের দাম (যেমন: ১২৫০)</label>
                     <Input
                       value={form.banner_old_price || ''}
                       onChange={e => setForm(prev => ({ ...prev, banner_old_price: e.target.value }))}
@@ -314,7 +315,7 @@ export default function AdminLandingPages() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-1">New Price (e.g. ৫৯০)</label>
+                    <label className="block text-sm font-medium mb-1">বর্তমান দাম (যেমন: ৫৯০)</label>
                     <Input
                       value={form.banner_new_price || ''}
                       onChange={e => setForm(prev => ({ ...prev, banner_new_price: e.target.value }))}
@@ -327,7 +328,7 @@ export default function AdminLandingPages() {
 
             {/* Products */}
             <div className="space-y-4">
-              <h3 className="font-semibold text-sm text-muted-foreground uppercase">Products (max 5)</h3>
+              <h3 className="font-semibold text-sm text-muted-foreground uppercase">পণ্যসমূহ (সর্বোচ্চ ৫টি)</h3>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-60 overflow-y-auto border border-border rounded-lg p-3">
                 {allProducts.map(product => (
                   <label
@@ -347,15 +348,15 @@ export default function AdminLandingPages() {
                   </label>
                 ))}
               </div>
-              <p className="text-xs text-muted-foreground">{form.product_ids.length}/5 selected</p>
+              <p className="text-xs text-muted-foreground">{form.product_ids.length}/৫ টি সিলেক্ট করা হয়েছে</p>
             </div>
 
             {/* How to Use */}
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <h3 className="font-semibold text-sm text-muted-foreground uppercase">How to Use Cards</h3>
+                <h3 className="font-semibold text-sm text-muted-foreground uppercase">ব্যবহারের নিয়ম কার্ড</h3>
                 <Button type="button" variant="outline" size="sm" onClick={addHowToCard}>
-                  <Plus className="h-4 w-4 mr-1" /> Add Card
+                  <Plus className="h-4 w-4 mr-1" /> কার্ড যোগ করুন
                 </Button>
               </div>
               {form.how_to_use_cards.map((card, i) => (
@@ -365,16 +366,16 @@ export default function AdminLandingPages() {
                   </button>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-sm font-medium mb-1">Title</label>
+                      <label className="block text-sm font-medium mb-1">টাইটেল</label>
                       <Input value={card.title} onChange={e => updateHowToCard(i, 'title', e.target.value)} />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium mb-1">Image</label>
+                      <label className="block text-sm font-medium mb-1">ইমেজ</label>
                       <ImageUpload value={card.image} onChange={v => updateHowToCard(i, 'image', v)} folder="landing-pages" />
                     </div>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-1">Description</label>
+                    <label className="block text-sm font-medium mb-1">বিবরণ</label>
                     <textarea
                       value={card.description}
                       onChange={e => updateHowToCard(i, 'description', e.target.value)}
@@ -388,7 +389,7 @@ export default function AdminLandingPages() {
             {/* Reviews */}
             <div className="flex items-center gap-2">
               <Switch checked={form.show_reviews} onCheckedChange={v => setForm(prev => ({ ...prev, show_reviews: v }))} />
-              <span className="text-sm">Show Reviews Section</span>
+              <span className="text-sm">রিভিউ সেকশন দেখান</span>
             </div>
 
             <Button onClick={handleSave} className="btn-accent w-full" disabled={createPage.isPending || updatePage.isPending}>
