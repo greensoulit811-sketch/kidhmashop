@@ -51,7 +51,7 @@ export default function AdminLayout() {
     // { name: t('admin.slider'), href: '/admin/slider', icon: Image, roles: ['admin', 'manager'] },
     // { name: 'Coupons', href: '/admin/coupons', icon: Tag, roles: ['admin', 'manager'] },
     // { name: 'Shipping Zones', href: '/admin/shipping', icon: MapPin, roles: ['admin'] },
-    // { name: 'Shipping Methods', href: '/admin/shipping-methods', icon: Truck, roles: ['admin'] },
+    { name: 'Shipping Methods', href: '/admin/shipping-methods', icon: Truck, roles: ['admin'] },
     { name: 'Reviews', href: '/admin/reviews', icon: MessageSquare, roles: ['admin', 'manager'] },
     { name: 'Courier', href: '/admin/courier', icon: Truck, roles: ['admin'] },
     { name: 'Payment Methods', href: '/admin/payment-methods', icon: CreditCard, roles: ['admin'] },

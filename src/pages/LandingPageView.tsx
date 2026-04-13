@@ -304,7 +304,7 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
             <h2 className="text-md md:text-5xl font-bold text-center mb-10 leading-tight">
               {page.video_section_title || t('landingPage.videoOverview') || 'Watch the Video'}
             </h2>
-            <div className="rounded-2xl overflow-hidden -mt-2 lg:mt-12 border-[2px] border-[#22C55E]">
+            <div className="rounded-2xl overflow-hidden border-[2px] border-[#22C55E]">
               <div className="aspect-video bg-black">
                 {isDirectVideo(page.video_url) ? (
                   <video
