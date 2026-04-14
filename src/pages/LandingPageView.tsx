@@ -410,10 +410,6 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
                   );
                 })}
               </CarouselContent>
-              <div className="flex justify-center md:block">
-                <CarouselPrevious className="static md:absolute -translate-y-0 md:top-1/2 md:-translate-y-1/2 md:-left-12 mt-6 md:mt-0 mr-4 md:mr-0 h-10 w-10 border-accent text-accent hover:bg-accent hover:text-white" />
-                <CarouselNext className="static md:absolute -translate-y-0 md:top-1/2 md:-translate-y-1/2 md:-right-12 mt-6 md:mt-0 h-10 w-10 border-accent text-accent hover:bg-accent hover:text-white" />
-              </div>
             </Carousel>
           </div>
         </section>
