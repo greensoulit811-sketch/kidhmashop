@@ -12,7 +12,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Star, ShoppingBag, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Star, ShoppingBag, ChevronDown, ChevronLeft, ChevronRight, ShoppingCart } from 'lucide-react';
 import { toast } from 'sonner';
 import { Layout } from '@/components/layout/Layout';
 import {
@@ -56,6 +56,27 @@ const isDirectVideo = (url: string) => {
   // Don't treat drive links as direct video (requires iframe)
   if (value.includes('drive.google.com')) return false;
   return value.endsWith('.mp4') || value.endsWith('.webm') || value.endsWith('.ogg') || value.includes('supabase.co/storage/v1/object/public/');
+};
+
+const parseFormattedText = (text: string) => {
+  if (!text) return null;
+  return text.split(/(\[\[.*?\]\]|\{\{.*?\}\})/).map((part, i) => {
+    if (part.startsWith('[[') && part.endsWith(']]')) {
+      return (
+        <span key={i} className="text-[#065f46]">
+          {part.substring(2, part.length - 2)}
+        </span>
+      );
+    }
+    if (part.startsWith('{{') && part.endsWith('}}')) {
+      return (
+        <span key={i} className="text-[#ff0000]">
+          {part.substring(2, part.length - 2)}
+        </span>
+      );
+    }
+    return part;
+  });
 };
 
 // Fetch products by IDs
@@ -202,6 +223,11 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
+  const copyUrl = (slug: string) => {
+    navigator.clipboard.writeText(`${window.location.origin}/lp/${slug}`);
+    toast.success('URL copied');
+  };
+
   const scrollToCheckout = () => {
     document.getElementById('lp-checkout')?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -289,19 +315,27 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
       <div className="min-h-screen bg-background">
         {/* Hero Section */}
         <section
-          className="relative min-h-[20vh] md:min-h-[85vh] flex items-center justify-center text-center py-16 px-4"
-          style={{
-            backgroundImage: page.hero_image ? `url(${page.hero_image})` : undefined,
-            backgroundSize: '100% 100%',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat'
-          }}
+          className="relative min-h-[40vh] md:min-h-[50vh] flex flex-col items-center justify-center text-center py-10 md:py-16 px-4 bg-[#065f46]"
         >
-          {page.hero_image && <div className="absolute inset-0 bg-black/50" />}
-          <div className="text-center mt-8">
-            <Button size="lg" className="btn-accent text-xl px-6 lg:px-14 py-7 lg:py-8" onClick={scrollToCheckout}>
-              {page.hero_cta_text}
-            </Button>
+          {page.hero_avatar && (
+            <div className="mb-6 md:mb-8">
+              <div className="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-white overflow-hidden shadow-xl relative">
+                <img src={page.hero_avatar} alt="Avatar" className="w-full h-full object-cover" />
+              </div>
+            </div>
+          )}
+
+          <div className="w-full max-w-4xl mx-auto space-y-8 md:space-y-12">
+            <h1 className="text-2xl md:text-5xl lg:text-6xl font-black leading-tight text-white drop-shadow-sm">
+              {page.hero_title}
+            </h1>
+
+            <div className="pt-2 md:pt-4">
+              <Button size="lg" className="btn-accent text-xl px-10 lg:px-20 py-7 lg:py-10 rounded-full shadow-lg hover:shadow-accent/40 transition-all font-bold" onClick={scrollToCheckout}>
+                <ShoppingCart className="w-8 h-8 md:w-10 md:h-10 mr-4" />
+                {page.hero_cta_text}
+              </Button>
+            </div>
           </div>
         </section>
 
@@ -349,9 +383,7 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
               )}
 
               <div className="text-center mt-8">
-                <Button size="lg" className="btn-accent text-xl px-8 lg:px-12 py-7 lg:py-8" onClick={scrollToCheckout}>
-                  {page.hero_cta_text}
-                </Button>
+                <CTAButton />
               </div>
 
               {/* banner */}
@@ -453,7 +485,7 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
                 </div>
               </Carousel>
               <div className="text-center mt-8">
-                <Button size="lg" className="btn-accent text-xl px-9 lg:px-12 py-7 lg:py-8 !rounded-lg" onClick={scrollToCheckout}>
+                <Button size="lg" className="btn-accent text-xl px-10 lg:px-16 py-7 lg:py-8 rounded-full shadow-lg hover:shadow-accent/40 transition-all font-bold" onClick={scrollToCheckout}>
                   {page.hero_cta_text}
                 </Button>
               </div>
@@ -461,27 +493,105 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
           </section>
         )}
 
-        {/* review */}
-
-        {page.show_reviews && reviews.length > 0 && (
-          <section className="py-6 md:py-10 px-4">
+        {/* reviews section */}
+        {((page.testimonial_cards && page.testimonial_cards.length > 0) || (page.show_reviews && reviews.length > 0)) && (
+          <section className="py-10 md:py-16 px-4">
             <div className="max-w-6xl mx-auto">
-              <h2 className="text-3xl md:text-5xl font-bold text-center mb-12">{t('common.customerReviews') || 'Customer Reviews'}</h2>
+              <h2 className="text-3xl md:text-5xl font-bold text-center mb-12">
+                {t('common.customerReviews') || 'ক্রেতারা যা বলছেন'}
+              </h2>
+              
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {reviews.slice(0, 6).map(review => (
-                  <div key={review.id} className="bg-card border border-border rounded-xl p-5">
-                    <div className="flex gap-1 mb-2">
-                      {Array.from({ length: 5 }).map((_, i) => (
-                        <Star key={i} className={`h-4 w-4 ${i < review.rating ? 'text-yellow-500 fill-yellow-500' : 'text-muted-foreground'}`} />
-                      ))}
+                {page.testimonial_cards && page.testimonial_cards.length > 0 ? (
+                  page.testimonial_cards.map((testimonial, i) => (
+                    <div key={i} className="bg-white border border-border/60 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col h-full">
+                      <div className="flex gap-1 mb-4">
+                        {Array.from({ length: 5 }).map((_, starI) => (
+                          <Star 
+                            key={starI} 
+                            className={`h-5 w-5 ${starI < testimonial.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-200'}`} 
+                          />
+                        ))}
+                      </div>
+                      <p className="text-gray-600 mb-6 flex-grow leading-relaxed italic">
+                        "{testimonial.text}"
+                      </p>
+                      <div className="flex items-center gap-3 border-t pt-4">
+                        <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center text-accent font-bold">
+                          {testimonial.name.charAt(0)}
+                        </div>
+                        <p className="font-bold text-gray-900">{testimonial.name}</p>
+                      </div>
                     </div>
-                    <p className="text-sm text-muted-foreground mb-3 line-clamp-3">{review.text}</p>
-                    <p className="text-sm font-semibold">{review.name}</p>
+                  ))
+                ) : (
+                  reviews.slice(0, 6).map(review => (
+                    <div key={review.id} className="bg-white border border-border/60 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col h-full">
+                      <div className="flex gap-1 mb-4">
+                        {Array.from({ length: 5 }).map((_, i) => (
+                          <Star key={i} className={`h-5 w-5 ${i < review.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-200'}`} />
+                        ))}
+                      </div>
+                      <p className="text-gray-600 mb-6 flex-grow leading-relaxed italic">"{review.text}"</p>
+                      <div className="flex items-center gap-3 border-t pt-4">
+                        <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center text-accent font-bold">
+                          {review.name.charAt(0)}
+                        </div>
+                        <p className="font-bold text-gray-900">{review.name}</p>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+
+              <div className="text-center mt-14">
+                <Button size="lg" className="btn-accent text-xl px-10 lg:px-16 py-7 lg:py-8 rounded-full shadow-lg hover:shadow-accent/40 transition-all font-bold" onClick={scrollToCheckout}>
+                  {page.hero_cta_text}
+                </Button>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* videos grid section */}
+        {page.video_cards && page.video_cards.length > 0 && (
+          <section className="py-10 md:py-16 px-4 bg-secondary/10">
+            <div className="max-w-6xl mx-auto">
+              <h2 className="text-3xl md:text-5xl font-bold text-center mb-12">
+                {t('landingPage.videoReviews') || 'ভিডিও রিভিউ'}
+              </h2>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {page.video_cards.map((video, i) => (
+                  <div key={i} className="flex flex-col h-full bg-card border rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                    <div className="aspect-video bg-black relative">
+                      {isDirectVideo(video.video_url) ? (
+                        <video
+                          src={video.video_url}
+                          controls
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <iframe
+                          src={getVideoEmbedUrl(video.video_url)}
+                          title={video.title || `Video review ${i + 1}`}
+                          className="w-full h-full"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                        />
+                      )}
+                    </div>
+                    {video.title && (
+                      <div className="p-4 text-center">
+                        <p className="font-semibold text-lg">{video.title}</p>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
-              <div className="text-center mt-14">
-                <Button size="lg" className="btn-accent text-xl px-9 lg:px-12 py-7 lg:py-8" onClick={scrollToCheckout}>
+              
+              <div className="text-center mt-12">
+                <Button size="lg" className="btn-accent text-xl px-10 lg:px-16 py-7 lg:py-8 rounded-full font-bold" onClick={scrollToCheckout}>
                   {page.hero_cta_text}
                 </Button>
               </div>
@@ -609,9 +719,17 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
                 </div>
               </div>
 
-              <Button type="submit" size="lg" className="btn-accent w-full text-xl py-7 lg:py-8 !rounded-lg" disabled={createOrder.isPending || !selectedProduct}>
-                {createOrder.isPending ? (t('checkout.processing') || 'Processing...') : (page.hero_cta_text || t('checkout.placeOrder') || 'Place Order')}
-              </Button>
+              <div className="pt-4">
+                <Button
+                  size="lg"
+                  type="submit"
+                  disabled={createOrder.isPending || !selectedProduct}
+                  className="w-full btn-accent text-xl py-6 md:py-8 font-bold rounded-xl"
+                >
+                  <ShoppingCart className="inline h-8 w-8 mr-3" />
+                  {createOrder.isPending ? (t('checkout.processing') || 'Processing...') : (page.hero_cta_text || t('checkout.placeOrder') || 'Place Order')}
+                </Button>
+              </div>
             </form>
           </div>
         </section>

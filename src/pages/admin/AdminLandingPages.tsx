@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useLandingPages, useCreateLandingPage, useUpdateLandingPage, useDeleteLandingPage, LandingPage, HowToUseCard } from '@/hooks/useLandingPages';
+import { useLandingPages, useCreateLandingPage, useUpdateLandingPage, useDeleteLandingPage, LandingPage, HowToUseCard, TestimonialCard, VideoCard } from '@/hooks/useLandingPages';
 import { useProducts } from '@/hooks/useShopData';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,7 +8,7 @@ import { ImageUpload } from '@/components/admin/ImageUpload';
 import { VideoUpload } from '@/components/admin/VideoUpload';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
-import { Plus, Pencil, Trash2, ExternalLink, X, Copy } from 'lucide-react';
+import { Plus, Pencil, Trash2, ExternalLink, X, Copy, Star, Video } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
@@ -23,6 +23,7 @@ const emptyForm = (): Omit<LandingPage, 'id' | 'created_at' | 'updated_at'> => (
   hero_title: '',
   hero_subtitle: '',
   hero_image: '',
+  hero_avatar: '',
   hero_cta_text: 'অর্ডার করুন',
   video_url: '',
   video_section_title: 'ভিডিওটি দেখুন',
@@ -32,6 +33,8 @@ const emptyForm = (): Omit<LandingPage, 'id' | 'created_at' | 'updated_at'> => (
   show_banner: false,
   product_ids: [],
   how_to_use_cards: [],
+  testimonial_cards: [],
+  video_cards: [],
   show_reviews: true,
 });
 
@@ -61,6 +64,7 @@ export default function AdminLandingPages() {
       hero_title: p.hero_title,
       hero_subtitle: p.hero_subtitle || '',
       hero_image: p.hero_image || '',
+      hero_avatar: p.hero_avatar || '',
       hero_cta_text: p.hero_cta_text,
       video_url: p.video_url || '',
       video_section_title: p.video_section_title || 'ভিডিওটি দেখুন',
@@ -70,6 +74,8 @@ export default function AdminLandingPages() {
       show_banner: p.show_banner || false,
       product_ids: p.product_ids || [],
       how_to_use_cards: p.how_to_use_cards || [],
+      testimonial_cards: p.testimonial_cards || [],
+      video_cards: p.video_cards || [],
       show_reviews: p.show_reviews,
     });
     setIsOpen(true);
@@ -116,6 +122,50 @@ export default function AdminLandingPages() {
     setForm(prev => ({
       ...prev,
       how_to_use_cards: prev.how_to_use_cards.filter((_, i) => i !== index),
+    }));
+  };
+
+  const addTestimonialCard = () => {
+    setForm(prev => ({
+      ...prev,
+      testimonial_cards: [...(prev.testimonial_cards || []), { name: '', rating: 5, text: '' }],
+    }));
+  };
+
+  const updateTestimonialCard = (index: number, field: keyof TestimonialCard, value: any) => {
+    setForm(prev => {
+      const cards = [...(prev.testimonial_cards || [])];
+      cards[index] = { ...cards[index], [field]: value };
+      return { ...prev, testimonial_cards: cards };
+    });
+  };
+
+  const removeTestimonialCard = (index: number) => {
+    setForm(prev => ({
+      ...prev,
+      testimonial_cards: (prev.testimonial_cards || []).filter((_, i) => i !== index),
+    }));
+  };
+
+  const addVideoCard = () => {
+    setForm(prev => ({
+      ...prev,
+      video_cards: [...(prev.video_cards || []), { title: '', video_url: '' }],
+    }));
+  };
+
+  const updateVideoCard = (index: number, field: keyof VideoCard, value: string) => {
+    setForm(prev => {
+      const cards = [...(prev.video_cards || [])];
+      cards[index] = { ...cards[index], [field]: value };
+      return { ...prev, video_cards: cards };
+    });
+  };
+
+  const removeVideoCard = (index: number) => {
+    setForm(prev => ({
+      ...prev,
+      video_cards: (prev.video_cards || []).filter((_, i) => i !== index),
     }));
   };
 
@@ -255,12 +305,18 @@ export default function AdminLandingPages() {
                 <Input value={form.hero_subtitle || ''} onChange={e => setForm(prev => ({ ...prev, hero_subtitle: e.target.value }))} />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">হিরো ইমেজ</label>
+                <label className="block text-sm font-medium mb-1">হিরো ইমেজ (Background)</label>
                 <ImageUpload value={form.hero_image || ''} onChange={v => setForm(prev => ({ ...prev, hero_image: v }))} folder="landing-pages" />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">অর্ডার বাটন টেক্সট</label>
-                <Input value={form.hero_cta_text} onChange={e => setForm(prev => ({ ...prev, hero_cta_text: e.target.value }))} />
+                <label className="block text-sm font-medium mb-1">হিরো অবতার (বর্ডার করা ছোট ইমেজ)</label>
+                <ImageUpload value={form.hero_avatar || ''} onChange={v => setForm(prev => ({ ...prev, hero_avatar: v }))} folder="landing-pages" />
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1">অর্ডার বাটন টেক্সট</label>
+                  <Input value={form.hero_cta_text} onChange={e => setForm(prev => ({ ...prev, hero_cta_text: e.target.value }))} />
+                </div>
               </div>
             </div>
 
@@ -386,10 +442,85 @@ export default function AdminLandingPages() {
               ))}
             </div>
 
+            {/* Testimonials */}
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <h3 className="font-semibold text-sm text-muted-foreground uppercase">টেস্টিমোনিয়াল কার্ড (রিভিউ)</h3>
+                <Button type="button" variant="outline" size="sm" onClick={addTestimonialCard}>
+                  <Plus className="h-4 w-4 mr-1" /> রিভিউ যোগ করুন
+                </Button>
+              </div>
+              <div className="grid grid-cols-1 gap-4">
+                {(form.testimonial_cards || []).map((card, i) => (
+                  <div key={i} className="border border-border rounded-lg p-4 space-y-3 relative">
+                    <button type="button" onClick={() => removeTestimonialCard(i)} className="absolute top-2 right-2 text-destructive">
+                      <X className="h-4 w-4" />
+                    </button>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-sm font-medium mb-1">ক্রেতার নাম</label>
+                        <Input value={card.name} onChange={e => updateTestimonialCard(i, 'name', e.target.value)} placeholder="যেমন: সারাহ জনসন" />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-1">রেটিং (১-৫)</label>
+                        <div className="flex gap-1">
+                          {[1, 2, 3, 4, 5].map(star => (
+                            <button key={star} type="button" onClick={() => updateTestimonialCard(i, 'rating', star)}>
+                              <Star className={`h-5 w-5 ${star <= card.rating ? 'fill-yellow-400 text-yellow-400' : 'text-muted'}`} />
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">রিভিউ টেক্সট</label>
+                      <textarea
+                        value={card.text}
+                        onChange={e => updateTestimonialCard(i, 'text', e.target.value)}
+                        className="input-shop min-h-[60px]"
+                        placeholder="আপনার রিভিউ লিখুন..."
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Video Cards */}
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <h3 className="font-semibold text-sm text-muted-foreground uppercase">ভিডিও রিভিউ গ্রিড (৩টা গ্রিড)</h3>
+                <Button type="button" variant="outline" size="sm" onClick={addVideoCard}>
+                  <Plus className="h-4 w-4 mr-1" /> ভিডিও যোগ করুন
+                </Button>
+              </div>
+              <div className="grid grid-cols-1 gap-4">
+                {(form.video_cards || []).map((card, i) => (
+                  <div key={i} className="border border-border rounded-lg p-4 space-y-3 relative">
+                    <button type="button" onClick={() => removeVideoCard(i)} className="absolute top-2 right-2 z-10 text-destructive">
+                      <X className="h-4 w-4" />
+                    </button>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">ভিডিও টাইটেল (ঐচ্ছিক)</label>
+                      <Input value={card.title} onChange={e => updateVideoCard(i, 'title', e.target.value)} placeholder="ভিডিও টাইটেল দিন" />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">ভিডিও আপলোড/লিংক</label>
+                      <VideoUpload
+                        value={card.video_url}
+                        onChange={v => updateVideoCard(i, 'video_url', v)}
+                        folder="landing-pages"
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
             {/* Reviews */}
             <div className="flex items-center gap-2">
               <Switch checked={form.show_reviews} onCheckedChange={v => setForm(prev => ({ ...prev, show_reviews: v }))} />
-              <span className="text-sm">রিভিউ সেকশন দেখান</span>
+              <span className="text-sm">গ্লোবাল রিভিউ সেকশন দেখান</span>
             </div>
 
             <Button onClick={handleSave} className="btn-accent w-full" disabled={createPage.isPending || updatePage.isPending}>

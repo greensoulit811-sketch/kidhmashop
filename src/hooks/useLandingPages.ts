@@ -8,6 +8,17 @@ export interface HowToUseCard {
   description: string;
 }
 
+export interface TestimonialCard {
+  name: string;
+  rating: number;
+  text: string;
+}
+
+export interface VideoCard {
+  title: string;
+  video_url: string;
+}
+
 export interface LandingPage {
   id: string;
   title: string;
@@ -16,7 +27,9 @@ export interface LandingPage {
   hero_title: string;
   hero_subtitle: string | null;
   hero_image: string | null;
+  hero_avatar: string | null;
   hero_cta_text: string;
+  cta_button_color?: string | null;
   video_url?: string | null;
   video_section_title?: string | null;
   video_bottom_title?: string | null;
@@ -25,6 +38,8 @@ export interface LandingPage {
   show_banner?: boolean;
   product_ids: string[];
   how_to_use_cards: HowToUseCard[];
+  testimonial_cards?: TestimonialCard[];
+  video_cards?: VideoCard[];
   show_reviews: boolean;
   created_at: string;
   updated_at: string;
@@ -43,6 +58,8 @@ export const useLandingPages = () => {
         ...d,
         video_url: (d.video_url as string) || null,
         how_to_use_cards: (d.how_to_use_cards as any) || [],
+        testimonial_cards: (d.testimonial_cards as any) || [],
+        video_cards: (d.video_cards as any) || [],
       })) as LandingPage[];
     },
   });
@@ -63,6 +80,8 @@ export const useLandingPage = (slug: string) => {
         ...data,
         video_url: (data.video_url as string) || null,
         how_to_use_cards: (data.how_to_use_cards as any) || [],
+        testimonial_cards: (data.testimonial_cards as any) || [],
+        video_cards: (data.video_cards as any) || [],
       } as LandingPage;
     },
     enabled: !!slug,
@@ -78,6 +97,8 @@ export const useCreateLandingPage = () => {
         .insert({
           ...page,
           how_to_use_cards: JSON.parse(JSON.stringify(page.how_to_use_cards)),
+          testimonial_cards: JSON.parse(JSON.stringify(page.testimonial_cards || [])),
+          video_cards: JSON.parse(JSON.stringify(page.video_cards || [])),
         } as any)
         .select()
         .single();
@@ -99,6 +120,12 @@ export const useUpdateLandingPage = () => {
       const payload: any = { ...page };
       if (page.how_to_use_cards) {
         payload.how_to_use_cards = JSON.parse(JSON.stringify(page.how_to_use_cards));
+      }
+      if (page.testimonial_cards) {
+        payload.testimonial_cards = JSON.parse(JSON.stringify(page.testimonial_cards));
+      }
+      if (page.video_cards) {
+        payload.video_cards = JSON.parse(JSON.stringify(page.video_cards));
       }
       const { data, error } = await supabase
         .from('landing_pages')
