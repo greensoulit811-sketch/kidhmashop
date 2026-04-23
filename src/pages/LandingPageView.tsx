@@ -299,6 +299,14 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
     );
   }
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Skeleton className="h-16 w-64" />
+      </div>
+    );
+  }
+
   if (!page) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -315,23 +323,40 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
       <div className="min-h-screen bg-background">
         {/* Hero Section */}
         <section
-          className="relative min-h-[40vh] md:min-h-[50vh] flex flex-col items-center justify-center text-center py-10 md:py-16 px-4 bg-[#065f46]"
+          className="relative min-h-[45vh] md:min-h-[60vh] flex flex-col items-center justify-center text-center py-12 md:py-24 px-4 bg-gradient-to-br from-[#065f46] via-[#064e3b] to-[#042f2e] overflow-hidden"
         >
-          {page.hero_avatar && (
-            <div className="mb-6 md:mb-8">
-              <div className="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-white overflow-hidden shadow-xl relative">
-                <img src={page.hero_avatar} alt="Avatar" className="w-full h-full object-cover" />
+          {/* Decorative elements */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div className="absolute top-0 left-0 w-64 h-64 bg-accent/10 blur-[100px] -translate-x-1/2 -translate-y-1/2 rounded-full" />
+            <div className="absolute bottom-0 right-0 w-96 h-96 bg-accent/5 blur-[120px] translate-x-1/3 translate-y-1/3 rounded-full" />
+          </div>
+          {(page.hero_avatar || settings.site_logo) && (
+            <div className="mb-6 md:mb-10">
+              <div className="w-24 h-24 md:w-36 md:h-36 rounded-full border-4 border-white overflow-hidden shadow-2xl bg-white relative mx-auto">
+                <img 
+                  src={page.hero_avatar || settings.site_logo} 
+                  alt="Logo" 
+                  className="w-full h-full object-cover shrink-0" 
+                />
               </div>
             </div>
           )}
 
-          <div className="w-full max-w-4xl mx-auto space-y-8 md:space-y-12">
-            <h1 className="text-2xl md:text-5xl lg:text-6xl font-black leading-tight text-white drop-shadow-sm">
-              {page.hero_title}
-            </h1>
+          <div className="w-full container mx-auto space-y-6 md:space-y-8">
+            <div className="bg-white/95 backdrop-blur-sm py-5 md:py-10 px-6 md:px-12 rounded-2xl md:rounded-3xl shadow-2xl border-b-4 border-gray-200/50 max-w-5xl mx-auto">
+              <h1 className="text-2xl md:text-5xl lg:text-6xl font-black leading-tight text-gray-900 tracking-tight">
+                {parseFormattedText(page.hero_title)}
+              </h1>
+            </div>
+
+            {page.hero_subtitle && (
+              <p className="text-lg md:text-3xl font-bold text-white drop-shadow-lg max-w-4xl mx-auto leading-relaxed px-4">
+                {parseFormattedText(page.hero_subtitle)}
+              </p>
+            )}
 
             <div className="pt-2 md:pt-4">
-              <Button size="lg" className="btn-accent text-xl px-10 lg:px-20 py-7 lg:py-10 rounded-full shadow-lg hover:shadow-accent/40 transition-all font-bold" onClick={scrollToCheckout}>
+              <Button size="lg" className="btn-accent text-xl px-10 lg:px-20 py-7 lg:py-10 rounded-lg shadow-lg hover:shadow-accent/40 transition-all font-bold" onClick={scrollToCheckout}>
                 <ShoppingCart className="w-8 h-8 md:w-10 md:h-10 mr-4" />
                 {page.hero_cta_text}
               </Button>
@@ -340,10 +365,10 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
         </section>
 
         {page.video_url && (
-          <section className="py-10 md:py-16 px-4 bg-secondary/10">
-            <div className="max-w-6xl mx-auto">
-              <h2 className="text-md md:text-5xl font-bold text-center mb-10 leading-tight">
-                {page.video_section_title || t('landingPage.videoOverview') || 'Watch the Video'}
+          <section className="py-10 md:py-16 lg:py-20 -mx-4 lg:px-4 bg-secondary/10">
+            <div className="container mx-auto px-4">
+              <h2 className="text-2xl md:text-5xl font-bold text-center mb-10 leading-tight">
+                {page.video_section_title || t('landingPage.videoOverview') || 'ভিডিও ওভারভিউ'}
               </h2>
               <div className="rounded-2xl overflow-hidden border-[2px] border-[#22C55E]">
                 <div className="aspect-video bg-black">
@@ -383,12 +408,15 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
               )}
 
               <div className="text-center mt-8">
-                <CTAButton />
+                <Button size="lg" className="btn-accent text-xl px-10 lg:px-16 py-7 lg:py-8 rounded-lg shadow-lg hover:shadow-accent/40 transition-all font-bold" onClick={scrollToCheckout}>
+                <ShoppingCart className="inline h-8 w-8 mr-3" />
+                  {page.hero_cta_text}
+                </Button>
               </div>
 
               {/* banner */}
 
-              <div className="mt-12 -mx-2">
+              <div className="mt-12 mx-auto">
                 {page.show_banner && page.banner_old_price && page.banner_new_price && (
                   <PricingBanner oldPrice={page.banner_old_price} newPrice={page.banner_new_price} />
                 )}
@@ -398,8 +426,8 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
         )}
 
         {/* Products Section */}
-        <section className="py-6 md:py-16 px-4">
-          <div className="max-w-6xl mx-auto">
+        <section className="py-6 md:py-16 lg:px-4 -mx-4">
+          <div className="container mx-auto">
             <h2 className="text-3xl md:text-5xl font-bold text-center mb-12">{t('common.ourProducts') || 'Our Products'}</h2>
             <Carousel
               opts={{
@@ -434,6 +462,7 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
                             )}
                           </div>
                           <Button className="btn-accent w-full mt-3 py-4 md:py-4 text-lg h-auto whitespace-normal leading-tight !rounded-lg" onClick={(e) => { e.stopPropagation(); setSelectedProduct(product); setQuantity(1); scrollToCheckout(); }}>
+                            <ShoppingCart className="inline h-12 w-12 mr-3" />
                             {page.hero_cta_text}
                           </Button>
                         </div>
@@ -486,6 +515,7 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
               </Carousel>
               <div className="text-center mt-8">
                 <Button size="lg" className="btn-accent text-xl px-10 lg:px-16 py-7 lg:py-8 rounded-full shadow-lg hover:shadow-accent/40 transition-all font-bold" onClick={scrollToCheckout}>
+                <ShoppingCart className="inline h-8 w-8 mr-3" />
                   {page.hero_cta_text}
                 </Button>
               </div>
@@ -495,8 +525,8 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
 
         {/* reviews section */}
         {((page.testimonial_cards && page.testimonial_cards.length > 0) || (page.show_reviews && reviews.length > 0)) && (
-          <section className="py-10 md:py-16 px-4">
-            <div className="max-w-6xl mx-auto">
+          <section className="py-10 md:py-16 lg:px-4 -mx-4">
+            <div className="container mx-auto">
               <h2 className="text-3xl md:text-5xl font-bold text-center mb-12">
                 {t('common.customerReviews') || 'ক্রেতারা যা বলছেন'}
               </h2>
@@ -545,7 +575,8 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
               </div>
 
               <div className="text-center mt-14">
-                <Button size="lg" className="btn-accent text-xl px-10 lg:px-16 py-7 lg:py-8 rounded-full shadow-lg hover:shadow-accent/40 transition-all font-bold" onClick={scrollToCheckout}>
+                <Button size="lg" className="btn-accent text-xl px-10 lg:px-16 py-7 lg:py-8 rounded-lg shadow-lg hover:shadow-accent/40 transition-all font-bold" onClick={scrollToCheckout}>
+                <ShoppingCart className="inline h-8 w-8 mr-3" />
                   {page.hero_cta_text}
                 </Button>
               </div>
@@ -555,10 +586,10 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
 
         {/* videos grid section */}
         {page.video_cards && page.video_cards.length > 0 && (
-          <section className="py-10 md:py-16 px-4 bg-secondary/10">
-            <div className="max-w-6xl mx-auto">
-              <h2 className="text-3xl md:text-5xl font-bold text-center mb-12">
-                {t('landingPage.videoReviews') || 'ভিডিও রিভিউ'}
+          <section className="py-10 md:py-16 lg:px-4 -mx-4 bg-secondary/10">
+            <div className="container mx-auto px-4">
+              <h2 className="text-2xl md:text-5xl font-bold text-center mb-12">
+                {t('landingPage.videoReviews')}
               </h2>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -581,17 +612,18 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
                         />
                       )}
                     </div>
-                    {video.title && (
+                    {/* {video.title && (
                       <div className="p-4 text-center">
                         <p className="font-semibold text-lg">{video.title}</p>
                       </div>
-                    )}
+                    )} */}
                   </div>
                 ))}
               </div>
               
               <div className="text-center mt-12">
-                <Button size="lg" className="btn-accent text-xl px-10 lg:px-16 py-7 lg:py-8 rounded-full font-bold" onClick={scrollToCheckout}>
+                <Button size="lg" className="btn-accent text-xl sm:text-2xl px-10 lg:px-16 py-7 lg:py-8 rounded-lg font-bold" onClick={scrollToCheckout}>
+                  <ShoppingCart className="inline h-8 w-8 mr-3" />
                   {page.hero_cta_text}
                 </Button>
               </div>
@@ -600,8 +632,8 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
         )}
 
         {/* checkout */}
-        <section id="lp-checkout" className="py-6 md:py-16 px-4 bg-secondary/30">
-          <div className="max-w-4xl mx-auto">
+        <section id="lp-checkout" className="py-6 md:py-16 lg:px-4 -mx-4 bg-secondary/30">
+          <div className="container mx-auto">
             <h2 className="text-2xl md:text-5xl font-bold text-center mb-4">
               <ShoppingBag className="inline h-10 w-10 mr-4 mb-2" />
               {t('checkout.title') || 'Checkout'}
@@ -724,7 +756,7 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
                   size="lg"
                   type="submit"
                   disabled={createOrder.isPending || !selectedProduct}
-                  className="w-full btn-accent text-xl py-6 md:py-8 font-bold rounded-xl"
+                  className="w-full btn-accent text-xl py-6 md:py-8 font-bold rounded-lg"
                 >
                   <ShoppingCart className="inline h-8 w-8 mr-3" />
                   {createOrder.isPending ? (t('checkout.processing') || 'Processing...') : (page.hero_cta_text || t('checkout.placeOrder') || 'Place Order')}

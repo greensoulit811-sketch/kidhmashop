@@ -203,6 +203,10 @@
     "resetToDefault": "Reset to Default",
     "noCountryFound": "No country found"
   },
+  "landingPage": {
+    "videoOverview": "Video Overview",
+    "videoReviews": "Video Reviews"
+  },
   "cookieConsent": {
     "title": "We use cookies",
     "message": "We use cookies and similar technologies to improve your experience, analyze traffic, and for marketing purposes.",

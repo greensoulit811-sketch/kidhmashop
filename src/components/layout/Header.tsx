@@ -79,10 +79,10 @@ export function Header() {
               <img
                 src={storeLogo}
                 alt={storeName}
-                className="h-12 md:h-14 w-auto object-contain"
+                className="h-10 md:h-14 w-auto object-contain"
               />
             ) : (
-              <span className="text-2xl md:text-4xl font-bold tracking-tight">
+              <span className="text-xl md:text-3xl font-extrabold tracking-tighter text-primary">
                 {storeName}
               </span>
             )}
