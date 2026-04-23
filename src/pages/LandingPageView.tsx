@@ -99,8 +99,8 @@ const useLandingProducts = (ids: string[]) => {
 };
 
 const PricingBanner = ({ oldPrice, newPrice }: { oldPrice: string; newPrice: string }) => (
-  <div className="w-full mt-10 px-2">
-    <div className="relative bg-[#14532d] py-12 md:py-20 overflow-hidden rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.3)]">
+  <div className="w-full mt-6 md:mt-10 px-2">
+    <div className="relative bg-[#14532d] py-8 md:py-20 overflow-hidden rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.3)]">
       {/* Decorative shimmering background */}
       <div className="absolute inset-0 opacity-20 pointer-events-none">
         <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-transparent via-white/5 to-transparent" />
@@ -130,16 +130,16 @@ const PricingBanner = ({ oldPrice, newPrice }: { oldPrice: string; newPrice: str
 
         {/* New Price with Animation */}
         <div className="flex flex-col items-center group cursor-default">
-          <div className="text-5xl md:text-8xl font-black flex flex-wrap items-center justify-center gap-x-4 md:gap-x-6 tracking-tighter leading-none animate-bounce-subtle">
-            <span className="text-[#bef264] drop-shadow-[0_0_25px_rgba(190,242,100,0.6)] filter brightness-110">
+          <div className="text-4xl md:text-8xl font-black flex flex-wrap items-center justify-center gap-x-4 md:gap-x-6 tracking-tighter leading-none animate-bounce-subtle">
+            <span className="text-[#bef264] drop-shadow-[0_0_20px_rgba(190,242,100,0.5)] filter brightness-110">
               {newPrice}
             </span>
           </div>
 
           {/* Animated Highlight Underline */}
-          <div className="relative w-full max-w-[400px] h-3 md:h-4 mt-6">
+          <div className="relative w-full max-w-[400px] h-2 md:h-4 mt-6">
             <div className="absolute inset-0 bg-[#facc15] rounded-full shadow-[0_0_30px_rgba(250,204,21,0.8)] animate-pulse" />
-            <div className="absolute inset-x-12 -bottom-2 h-2 bg-[#facc15] rounded-full opacity-40 blur-[1px]" />
+            <div className="absolute inset-x-8 md:inset-x-12 -bottom-2 h-2 bg-[#facc15] rounded-full opacity-40 blur-[1px]" />
           </div>
         </div>
       </div>
@@ -320,7 +320,7 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
 
   return (
     <Layout>
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background overflow-x-hidden">
         {/* Hero Section */}
         <section
           className="relative min-h-[45vh] md:min-h-[60vh] flex flex-col items-center justify-center text-center py-12 md:py-24 px-4 bg-gradient-to-br from-[#065f46] via-[#064e3b] to-[#042f2e] overflow-hidden"
@@ -342,21 +342,21 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
             </div>
           )}
 
-          <div className="w-full container mx-auto space-y-6 md:space-y-8">
-            <div className="bg-white/95 backdrop-blur-sm py-5 md:py-4 px-6 md:px-12 rounded-2xl md:rounded-lg shadow-2xl border-b-4 border-gray-200/50 container mx-auto">
-              <h1 className="text-2xl md:text-4xl lg:text-4xl font-black leading-tight text-gray-900 tracking-tight">
+          <div className="w-full container max-w-5xl px-2 md:px-0 mx-auto space-y-6 md:space-y-8">
+            <div className="bg-white/95 backdrop-blur-sm py-5 md:py-6 px-4 md:px-12 rounded-2xl md:rounded-3xl shadow-2xl border-b-4 border-gray-200/50">
+              <h1 className="text-2xl md:text-4xl lg:text-5xl font-black leading-tight text-gray-900 tracking-tight">
                 {parseFormattedText(page.hero_title)}
               </h1>
             </div>
 
             {page.hero_subtitle && (
-              <p className="text-lg md:text-2xl font-demebold text-white drop-shadow-lg max-w-5xl mx-auto leading-relaxed px-4">
+              <p className="text-sm md:text-2xl font-demebold text-white drop-shadow-lg max-w-5xl mx-auto leading-relaxed px-4">
                 {parseFormattedText(page.hero_subtitle)}
               </p>
             )}
 
-            <div className="pt-2 md:pt-4">
-              <Button size="lg" className="btn-accent text-xl px-10 lg:px-20 py-7 lg:py-8 rounded-lg shadow-lg hover:shadow-accent/40 transition-all font-bold" onClick={scrollToCheckout}>
+            <div className="pt-1 md:pt-4">
+              <Button size="lg" className="btn-accent text-sm md:text-xl px-6 lg:px-20 py-7 lg:py-8 rounded-lg shadow-lg hover:shadow-accent/40 transition-all font-bold" onClick={scrollToCheckout}>
                 <ShoppingCart className="w-8 h-8 md:w-10 md:h-10 mr-4" />
                 {page.hero_cta_text}
               </Button>
@@ -364,8 +364,10 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
           </div>
         </section>
 
+        {/* video and banner section */}
+
         {page.video_url && (
-          <section className="py-10 md:py-16 lg:py-20 -mx-4 lg:px-4 bg-secondary/10">
+          <section className="py-1 md:py-16 lg:py-20 bg-secondary/10 overflow-hidden">
             <div className="container mx-auto px-4">
               <h2 className="text-2xl md:text-5xl font-bold text-center mb-10 leading-tight">
                 {page.video_section_title || t('') || ''}
@@ -407,9 +409,9 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
                 </div>
               )}
 
-              <div className="text-center mt-8">
-                <Button size="lg" className="btn-accent text-xl px-10 lg:px-16 py-7 lg:py-8 rounded-lg shadow-lg hover:shadow-accent/40 transition-all font-bold" onClick={scrollToCheckout}>
-                <ShoppingCart className="inline h-8 w-8 mr-3" />
+              <div className="text-center mt-8 px-2">
+                <Button size="lg" className="btn-accent text-md md:text-xl px-8 md:px-16 py-6 md:py-8 rounded-lg shadow-lg hover:shadow-accent/40 transition-all font-bold w-full md:w-auto" onClick={scrollToCheckout}>
+                <ShoppingCart className="inline h-6 w-6 md:h-8 md:w-8 mr-2 md:mr-3" />
                   {page.hero_cta_text}
                 </Button>
               </div>
@@ -426,8 +428,8 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
         )}
 
         {/* Products Section */}
-        <section className="py-6 md:py-16 lg:px-4 -mx-4">
-          <div className="container mx-auto">
+        <section className="py-6 md:py-16 overflow-hidden">
+          <div className="container px-4 mx-auto">
             <h2 className="text-3xl md:text-5xl font-bold text-center mb-12">{t('common.ourProducts') || 'Our Products'}</h2>
             <Carousel
               opts={{
@@ -461,7 +463,7 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
                               <span className="text-sm text-muted-foreground line-through">{formatCurrency(product.price)}</span>
                             )}
                           </div>
-                          <Button className="btn-accent w-full mt-3 py-4 md:py-4 text-lg h-auto whitespace-normal leading-tight !rounded-lg" onClick={(e) => { e.stopPropagation(); setSelectedProduct(product); setQuantity(1); scrollToCheckout(); }}>
+                          <Button className="btn-accent w-full mt-3 py-4 md:py-4 text-md h-auto whitespace-normal leading-tight !rounded-lg" onClick={(e) => { e.stopPropagation(); setSelectedProduct(product); setQuantity(1); scrollToCheckout(); }}>
                             <ShoppingCart className="inline h-12 w-12 mr-3" />
                             {page.hero_cta_text}
                           </Button>
@@ -525,8 +527,8 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
 
         {/* reviews section */}
         {((page.testimonial_cards && page.testimonial_cards.length > 0) || (page.show_reviews && reviews.length > 0)) && (
-          <section className="py-10 md:py-16 lg:px-4 -mx-4">
-            <div className="container mx-auto">
+          <section className="py-4 md:py-16 overflow-hidden">
+            <div className="container px-4 mx-auto">
               <h2 className="text-3xl md:text-5xl font-bold text-center mb-12">
                 {t('common.customerReviews') || 'ক্রেতারা যা বলছেন'}
               </h2>
@@ -574,9 +576,9 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
                 )}
               </div>
 
-              <div className="text-center mt-14">
-                <Button size="lg" className="btn-accent text-xl px-10 lg:px-16 py-7 lg:py-8 rounded-lg shadow-lg hover:shadow-accent/40 transition-all font-bold" onClick={scrollToCheckout}>
-                <ShoppingCart className="inline h-8 w-8 mr-3" />
+              <div className="text-center mt-10 px-4">
+                <Button size="lg" className="btn-accent text-smm md:text-xl px-8 md:px-16 py-6 md:py-8 rounded-lg shadow-lg hover:shadow-accent/40 transition-all font-bold w-full md:w-auto" onClick={scrollToCheckout}>
+                <ShoppingCart className="inline h-6 w-6 md:h-8 md:w-8 mr-2 md:mr-3" />
                   {page.hero_cta_text}
                 </Button>
               </div>
@@ -586,13 +588,13 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
 
         {/* videos grid section */}
         {page.video_cards && page.video_cards.length > 0 && (
-          <section className="py-10 md:py-16 lg:px-4 -mx-4 bg-secondary/10">
+          <section className="py-4 md:py-16 bg-secondary/10 overflow-hidden">
             <div className="container mx-auto px-4">
               <h2 className="text-2xl md:text-5xl font-bold text-center mb-12">
                 {t('landingPage.videoReviews')}
               </h2>
               
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                 {page.video_cards.map((video, i) => (
                   <div key={i} className="flex flex-col h-full bg-card border rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
                     <div className="aspect-video bg-black relative">
@@ -621,9 +623,9 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
                 ))}
               </div>
               
-              <div className="text-center mt-12">
-                <Button size="lg" className="btn-accent text-xl sm:text-2xl px-10 lg:px-16 py-7 lg:py-8 rounded-lg font-bold" onClick={scrollToCheckout}>
-                  <ShoppingCart className="inline h-8 w-8 mr-3" />
+              <div className="text-center mt-10 px-2">
+                <Button size="lg" className="btn-accent text-lg md:text-xl px-8 md:px-16 py-6 md:py-8 rounded-lg font-bold w-full md:w-auto" onClick={scrollToCheckout}>
+                  <ShoppingCart className="inline h-6 w-6 md:h-8 md:w-8 mr-2 md:mr-3" />
                   {page.hero_cta_text}
                 </Button>
               </div>
@@ -632,8 +634,8 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
         )}
 
         {/* checkout */}
-        <section id="lp-checkout" className="py-6 md:py-16 lg:px-4 -mx-4 bg-secondary/30">
-          <div className="container mx-auto">
+        <section id="lp-checkout" className="py-4 md:py-16 bg-secondary/30 overflow-hidden">
+          <div className="container px-4 lg:px-0 mx-auto">
             <h2 className="text-2xl md:text-5xl font-bold text-center mb-4">
               <ShoppingBag className="inline h-10 w-10 mr-4 mb-2" />
               {t('checkout.title') || 'Checkout'}
@@ -648,14 +650,14 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
               {selectedProduct && (
                 <div className="bg-card border border-border rounded-xl p-3 flex items-center gap-4">
                   <img src={selectedProduct.images?.[0]} alt="" className="w-16 h-16 rounded-lg object-cover" />
-                  <div className="flex-1">
-                    <p className="font-semibold text-[10px] lg:text-xl">{selectedProduct.name}</p>
-                    <p className="text-accent font-bold">{formatCurrency(effectivePrice)}</p>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold text-sm lg:text-xl truncate">{selectedProduct.name}</p>
+                    <p className="text-accent font-bold text-sm">{formatCurrency(effectivePrice)}</p>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Button className='w-8 h-8 lg:w-10 lg:h-10' type="button" variant="outline" size="icon" onClick={() => setQuantity(Math.max(1, quantity - 1))}>-</Button>
-                    <span className="w-5 text-center font-medium">{quantity}</span>
-                    <Button className='w-8 h-8 lg:w-10 lg:h-10' type="button" variant="outline" size="icon" onClick={() => setQuantity(quantity + 1)}>+</Button>
+                  <div className="flex items-center gap-1 sm:gap-2">
+                    <Button className='w-8 h-8 md:w-10 md:h-10' type="button" variant="outline" size="icon" onClick={() => setQuantity(Math.max(1, quantity - 1))}>-</Button>
+                    <span className="w-8 text-center font-bold text-sm md:text-base">{quantity}</span>
+                    <Button className='w-8 h-8 md:w-10 md:h-10' type="button" variant="outline" size="icon" onClick={() => setQuantity(quantity + 1)}>+</Button>
                   </div>
                 </div>
               )}
