@@ -331,33 +331,32 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
             <div className="absolute bottom-0 right-0 w-96 h-96 bg-accent/5 blur-[120px] translate-x-1/3 translate-y-1/3 rounded-full" />
           </div>
           {(page.hero_avatar || settings.site_logo) && (
-            <div className="mb-6 md:mb-10">
+            <div className="mb-6 md:mb-8">
               <div className="w-24 h-24 md:w-36 md:h-36 rounded-full border-4 border-white overflow-hidden shadow-2xl bg-white relative mx-auto">
                 <img 
                   src={page.hero_avatar || settings.site_logo} 
                   alt="Logo" 
                   className="w-full h-full object-cover shrink-0" 
                 />
-                <p>heelo </p>
               </div>
             </div>
           )}
 
           <div className="w-full container mx-auto space-y-6 md:space-y-8">
-            <div className="bg-white/95 backdrop-blur-sm py-5 md:py-10 px-6 md:px-12 rounded-2xl md:rounded-3xl shadow-2xl border-b-4 border-gray-200/50 max-w-5xl mx-auto">
-              <h1 className="text-2xl md:text-5xl lg:text-6xl font-black leading-tight text-gray-900 tracking-tight">
+            <div className="bg-white/95 backdrop-blur-sm py-5 md:py-4 px-6 md:px-12 rounded-2xl md:rounded-lg shadow-2xl border-b-4 border-gray-200/50 container mx-auto">
+              <h1 className="text-2xl md:text-4xl lg:text-4xl font-black leading-tight text-gray-900 tracking-tight">
                 {parseFormattedText(page.hero_title)}
               </h1>
             </div>
 
             {page.hero_subtitle && (
-              <p className="text-lg md:text-3xl font-bold text-white drop-shadow-lg max-w-4xl mx-auto leading-relaxed px-4">
+              <p className="text-lg md:text-2xl font-demebold text-white drop-shadow-lg max-w-5xl mx-auto leading-relaxed px-4">
                 {parseFormattedText(page.hero_subtitle)}
               </p>
             )}
 
             <div className="pt-2 md:pt-4">
-              <Button size="lg" className="btn-accent text-xl px-10 lg:px-20 py-7 lg:py-10 rounded-lg shadow-lg hover:shadow-accent/40 transition-all font-bold" onClick={scrollToCheckout}>
+              <Button size="lg" className="btn-accent text-xl px-10 lg:px-20 py-7 lg:py-8 rounded-lg shadow-lg hover:shadow-accent/40 transition-all font-bold" onClick={scrollToCheckout}>
                 <ShoppingCart className="w-8 h-8 md:w-10 md:h-10 mr-4" />
                 {page.hero_cta_text}
               </Button>
@@ -369,7 +368,7 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
           <section className="py-10 md:py-16 lg:py-20 -mx-4 lg:px-4 bg-secondary/10">
             <div className="container mx-auto px-4">
               <h2 className="text-2xl md:text-5xl font-bold text-center mb-10 leading-tight">
-                {page.video_section_title || t('landingPage.videoOverview') || 'ভিডিও ওভারভিউ'}
+                {page.video_section_title || t('') || ''}
               </h2>
               <div className="rounded-2xl overflow-hidden border-[2px] border-[#22C55E]">
                 <div className="aspect-video bg-black">
