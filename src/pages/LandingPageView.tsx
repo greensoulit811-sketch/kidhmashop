@@ -338,6 +338,7 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
                   alt="Logo" 
                   className="w-full h-full object-cover shrink-0" 
                 />
+                <p>heelo </p>
               </div>
             </div>
           )}
