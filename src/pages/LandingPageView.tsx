@@ -342,9 +342,9 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
             </div>
           )}
 
-          <div className="w-full container max-w-5xl px-2 md:px-0 mx-auto space-y-6 md:space-y-8">
-            <div className="bg-white/95 backdrop-blur-sm py-5 md:py-6 px-4 md:px-12 rounded-2xl md:rounded-3xl shadow-2xl border-b-4 border-gray-200/50">
-              <h1 className="text-2xl md:text-4xl lg:text-5xl font-black leading-tight text-gray-900 tracking-tight">
+          <div className="w-full max-w-6xl px-2 md:px-0 mx-auto space-y-6 md:space-y-8">
+            <div className="bg-white/95 backdrop-blur-sm py-5 md:py-4 px-4 md:px-12 rounded-lg md:rounded-lg shadow-2xl border-b-4 border-gray-200/50">
+              <h1 className="text-2xl md:text-4xl lg:text-3xl font-black leading-tight text-gray-900 tracking-tight">
                 {parseFormattedText(page.hero_title)}
               </h1>
             </div>
@@ -635,7 +635,7 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
 
         {/* checkout */}
         <section id="lp-checkout" className="py-4 md:py-16 bg-secondary/30 overflow-hidden">
-          <div className="container px-4 lg:px-0 mx-auto">
+          <div className="max-w-5xl mx-autopx-4 lg:px-0 mx-auto">
             <h2 className="text-2xl md:text-5xl font-bold text-center mb-4">
               <ShoppingBag className="inline h-10 w-10 mr-4 mb-2" />
               {t('checkout.title') || 'Checkout'}
