@@ -396,7 +396,7 @@ export default function AdminProducts() {
                   values={formData.images}
                   onChange={(urls) => setFormData({ ...formData, images: urls })}
                   folder="products"
-                  maxImages={5}
+                  maxImages={10}
                 />
               </div>
               <div className="flex flex-wrap gap-4">

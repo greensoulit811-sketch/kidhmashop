@@ -130,7 +130,7 @@ interface MultiImageUploadProps {
   maxImages?: number;
 }
 
-export function MultiImageUpload({ values, onChange, folder = 'products', maxImages = 5 }: MultiImageUploadProps) {
+export function MultiImageUpload({ values, onChange, folder = 'products', maxImages = 10 }: MultiImageUploadProps) {
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 

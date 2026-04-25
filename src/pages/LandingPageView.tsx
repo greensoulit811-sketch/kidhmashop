@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useLandingPage } from '@/hooks/useLandingPages';
 import { useSiteSettings } from '@/contexts/SiteSettingsContext';
@@ -19,9 +19,10 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
   CarouselPrevious,
+  CarouselNext,
 } from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
 
 const getVideoEmbedUrl = (url: string) => {
   const value = url.trim();
@@ -169,6 +170,10 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
   const { data: paymentMethods = [] } = usePaymentMethods(true);
   const { data: reviews = [] } = useReviews(true);
   const { data: products = [] } = useLandingProducts(page?.product_ids || []);
+
+  const productAutoplay = useMemo(() => Autoplay({ delay: 3000, stopOnInteraction: false }), []);
+  const reviewAutoplay = useMemo(() => Autoplay({ delay: 3500, stopOnInteraction: false }), []);
+  const howToAutoplay = useMemo(() => Autoplay({ delay: 4000, stopOnInteraction: false }), []);
 
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [quantity, setQuantity] = useState(1);
@@ -436,6 +441,7 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
                 align: "start",
                 loop: true,
               }}
+              plugins={[productAutoplay]}
               className="w-full relative group"
             >
               <CarouselContent className="-ml-4">
@@ -488,6 +494,7 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
                   align: "start",
                   loop: true,
                 }}
+                plugins={[howToAutoplay]}
                 className="w-full relative group"
               >
                 <CarouselContent className="-ml-4">
@@ -533,48 +540,65 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
                 {t('common.customerReviews') || 'ক্রেতারা যা বলছেন'}
               </h2>
               
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {page.testimonial_cards && page.testimonial_cards.length > 0 ? (
-                  page.testimonial_cards.map((testimonial, i) => (
-                    <div key={i} className="bg-white border border-border/60 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col h-full">
-                      <div className="flex gap-1 mb-4">
-                        {Array.from({ length: 5 }).map((_, starI) => (
-                          <Star 
-                            key={starI} 
-                            className={`h-5 w-5 ${starI < testimonial.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-200'}`} 
-                          />
-                        ))}
-                      </div>
-                      <p className="text-gray-600 mb-6 flex-grow leading-relaxed italic">
-                        "{testimonial.text}"
-                      </p>
-                      <div className="flex items-center gap-3 border-t pt-4">
-                        <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center text-accent font-bold">
-                          {testimonial.name.charAt(0)}
+              <Carousel
+                opts={{
+                  align: "start",
+                  loop: true,
+                }}
+                plugins={[reviewAutoplay]}
+                className="w-full relative group"
+              >
+                <CarouselContent className="-ml-6">
+                  {page.testimonial_cards && page.testimonial_cards.length > 0 ? (
+                    page.testimonial_cards.map((testimonial, i) => (
+                      <CarouselItem key={i} className="pl-6 basis-full sm:basis-1/2 lg:basis-1/3">
+                        <div className="bg-white border border-border/60 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col h-full">
+                          <div className="flex gap-1 mb-4">
+                            {Array.from({ length: 5 }).map((_, starI) => (
+                              <Star 
+                                key={starI} 
+                                className={`h-5 w-5 ${starI < testimonial.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-200'}`} 
+                              />
+                            ))}
+                          </div>
+                          <p className="text-gray-600 mb-6 flex-grow leading-relaxed italic">
+                            "{testimonial.text}"
+                          </p>
+                          <div className="flex items-center gap-3 border-t pt-4">
+                            <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center text-accent font-bold">
+                              {testimonial.name.charAt(0)}
+                            </div>
+                            <p className="font-bold text-gray-900">{testimonial.name}</p>
+                          </div>
                         </div>
-                        <p className="font-bold text-gray-900">{testimonial.name}</p>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  reviews.slice(0, 6).map(review => (
-                    <div key={review.id} className="bg-white border border-border/60 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col h-full">
-                      <div className="flex gap-1 mb-4">
-                        {Array.from({ length: 5 }).map((_, i) => (
-                          <Star key={i} className={`h-5 w-5 ${i < review.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-200'}`} />
-                        ))}
-                      </div>
-                      <p className="text-gray-600 mb-6 flex-grow leading-relaxed italic">"{review.text}"</p>
-                      <div className="flex items-center gap-3 border-t pt-4">
-                        <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center text-accent font-bold">
-                          {review.name.charAt(0)}
+                      </CarouselItem>
+                    ))
+                  ) : (
+                    reviews.slice(0, 10).map(review => (
+                      <CarouselItem key={review.id} className="pl-6 basis-full sm:basis-1/2 lg:basis-1/3">
+                        <div className="bg-white border border-border/60 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col h-full">
+                          <div className="flex gap-1 mb-4">
+                            {Array.from({ length: 5 }).map((_, i) => (
+                              <Star key={i} className={`h-5 w-5 ${i < review.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-200'}`} />
+                            ))}
+                          </div>
+                          <p className="text-gray-600 mb-6 flex-grow leading-relaxed italic">"{review.text}"</p>
+                          <div className="flex items-center gap-3 border-t pt-4">
+                            <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center text-accent font-bold">
+                              {review.name.charAt(0)}
+                            </div>
+                            <p className="font-bold text-gray-900">{review.name}</p>
+                          </div>
                         </div>
-                        <p className="font-bold text-gray-900">{review.name}</p>
-                      </div>
-                    </div>
-                  ))
-                )}
-              </div>
+                      </CarouselItem>
+                    ))
+                  )}
+                </CarouselContent>
+                <div className="flex justify-center md:block">
+                  <CarouselPrevious className="static md:absolute -translate-y-0 md:top-1/2 md:-translate-y-1/2 md:-left-12 mt-6 md:mt-0 mr-4 md:mr-0 h-10 w-10 border-accent text-accent hover:bg-accent hover:text-white" />
+                  <CarouselNext className="static md:absolute -translate-y-0 md:top-1/2 md:-translate-y-1/2 md:-right-12 mt-6 md:mt-0 h-10 w-10 border-accent text-accent hover:bg-accent hover:text-white" />
+                </div>
+              </Carousel>
 
               <div className="text-center mt-10 px-4">
                 <Button size="lg" className="btn-accent text-smm md:text-xl px-8 md:px-16 py-6 md:py-8 rounded-lg shadow-lg hover:shadow-accent/40 transition-all font-bold w-full md:w-auto" onClick={scrollToCheckout}>
@@ -614,11 +638,6 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
                         />
                       )}
                     </div>
-                    {/* {video.title && (
-                      <div className="p-4 text-center">
-                        <p className="font-semibold text-lg">{video.title}</p>
-                      </div>
-                    )} */}
                   </div>
                 ))}
               </div>
@@ -635,7 +654,7 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
 
         {/* checkout */}
         <section id="lp-checkout" className="py-4 md:py-16 bg-secondary/30 overflow-hidden">
-          <div className="max-w-5xl mx-autopx-4 lg:px-0 mx-auto">
+          <div className="max-w-5xl mx-auto px-3 lg:px-0 mx-auto">
             <h2 className="text-2xl md:text-5xl font-bold text-center mb-4">
               <ShoppingBag className="inline h-10 w-10 mr-4 mb-2" />
               {t('checkout.title') || 'Checkout'}

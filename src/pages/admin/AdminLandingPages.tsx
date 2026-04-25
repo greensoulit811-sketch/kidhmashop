@@ -93,11 +93,11 @@ export default function AdminLandingPages() {
     setForm(prev => {
       const ids = prev.product_ids.includes(id)
         ? prev.product_ids.filter(p => p !== id)
-        : prev.product_ids.length < 5
+        : prev.product_ids.length < 10
           ? [...prev.product_ids, id]
           : prev.product_ids;
-      if (!prev.product_ids.includes(id) && prev.product_ids.length >= 5) {
-        toast.error('Maximum 5 products allowed');
+      if (!prev.product_ids.includes(id) && prev.product_ids.length >= 10) {
+        toast.error('Maximum 10 products allowed');
       }
       return { ...prev, product_ids: ids };
     });
@@ -384,7 +384,7 @@ export default function AdminLandingPages() {
 
             {/* Products */}
             <div className="space-y-4">
-              <h3 className="font-semibold text-sm text-muted-foreground uppercase">পণ্যসমূহ (সর্বোচ্চ ৫টি)</h3>
+              <h3 className="font-semibold text-sm text-muted-foreground uppercase">পণ্যসমূহ (সর্বোচ্চ ১০টি)</h3>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-60 overflow-y-auto border border-border rounded-lg p-3">
                 {allProducts.map(product => (
                   <label
@@ -404,7 +404,7 @@ export default function AdminLandingPages() {
                   </label>
                 ))}
               </div>
-              <p className="text-xs text-muted-foreground">{form.product_ids.length}/৫ টি সিলেক্ট করা হয়েছে</p>
+              <p className="text-xs text-muted-foreground">{form.product_ids.length}/১০ টি সিলেক্ট করা হয়েছে</p>
             </div>
 
             {/* How to Use */}
