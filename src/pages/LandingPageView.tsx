@@ -433,7 +433,7 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
         )}
 
         {/* Products Section */}
-        <section className="py-6 md:py-16 overflow-hidden">
+        <section className="py-6 md:py-8 overflow-hidden">
           <div className="container px-4 mx-auto">
             <h2 className="text-3xl md:text-5xl font-bold text-center mb-12">{t('common.ourProducts') || 'Our Products'}</h2>
             <Carousel
@@ -534,7 +534,7 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
 
         {/* reviews section */}
         {((page.testimonial_cards && page.testimonial_cards.length > 0) || (page.show_reviews && reviews.length > 0)) && (
-          <section className="py-4 md:py-16 overflow-hidden">
+          <section className="py-4 md:py-8 overflow-hidden">
             <div className="container px-4 mx-auto">
               <h2 className="text-3xl md:text-5xl font-bold text-center mb-12">
                 {t('common.customerReviews') || 'ক্রেতারা যা বলছেন'}
@@ -606,7 +606,7 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
 
         {/* videos grid section */}
         {page.video_cards && page.video_cards.length > 0 && (
-          <section className="py-4 md:py-16 bg-secondary/10 overflow-hidden">
+          <section className="py-4 md:py-8 bg-secondary/10 overflow-hidden">
             <div className="container mx-auto px-4">
               <h2 className="text-2xl md:text-5xl font-bold text-center mb-12">
                 {t('landingPage.videoReviews')}
