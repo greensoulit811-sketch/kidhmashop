@@ -328,7 +328,7 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
       <div className="min-h-screen bg-background overflow-x-hidden">
         {/* Hero Section */}
         <section
-          className="relative min-h-[45vh] md:min-h-[60vh] flex flex-col items-center justify-center text-center py-12 md:py-24 px-4 bg-gradient-to-br from-[#065f46] via-[#064e3b] to-[#042f2e] overflow-hidden"
+          className="relative min-h-[45vh] md:min-h-[60vh] flex flex-col items-center justify-center text-center py-8 md:py-2 px-4 bg-gradient-to-br from-[#065f46] via-[#064e3b] to-[#042f2e] overflow-hidden"
         >
           {/* Decorative elements */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -372,7 +372,7 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
         {/* video and banner section */}
 
         {page.video_url && (
-          <section className="py-1 md:py-16 lg:py-20 bg-secondary/10 overflow-hidden">
+          <section className="py-1 md:py-16 lg:py-8 bg-secondary/10 overflow-hidden">
             <div className="container mx-auto px-4">
               <h2 className="text-2xl md:text-5xl font-bold text-center mb-10 leading-tight">
                 {page.video_section_title || t('') || ''}
@@ -565,9 +565,6 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
                             "{testimonial.text}"
                           </p>
                           <div className="flex items-center gap-3 border-t pt-4">
-                            <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center text-accent font-bold">
-                              {testimonial.name.charAt(0)}
-                            </div>
                             <p className="font-bold text-gray-900">{testimonial.name}</p>
                           </div>
                         </div>
@@ -584,9 +581,6 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
                           </div>
                           <p className="text-gray-600 mb-6 flex-grow leading-relaxed italic">"{review.text}"</p>
                           <div className="flex items-center gap-3 border-t pt-4">
-                            <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center text-accent font-bold">
-                              {review.name.charAt(0)}
-                            </div>
                             <p className="font-bold text-gray-900">{review.name}</p>
                           </div>
                         </div>
@@ -620,7 +614,7 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
               
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                 {page.video_cards.map((video, i) => (
-                  <div key={i} className="flex flex-col h-full bg-card border rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                  <div key={i} className="flex flex-col h-full bg-card border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
                     <div className="aspect-video bg-black relative">
                       {isDirectVideo(video.video_url) ? (
                         <video
