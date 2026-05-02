@@ -12,7 +12,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Star, ShoppingBag, ChevronDown, ChevronLeft, ChevronRight, ShoppingCart } from 'lucide-react';
+import { Star, ShoppingBag, ChevronDown, ChevronLeft, ChevronRight, ShoppingCart, Phone } from 'lucide-react';
 import { toast } from 'sonner';
 import { Layout } from '@/components/layout/Layout';
 import {
@@ -417,54 +417,30 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
           </section>
         )}
 
-        {/* Products Section */}
-        <section className="py-6 md:py-8 overflow-hidden">
-          <div className="container px-4 mx-auto">
-            <h2 className="text-3xl md:text-5xl font-bold text-center mb-12">{t('common.ourProducts') || 'Our Products'}</h2>
-            <Carousel
-              opts={{
-                align: "start",
-                loop: true,
-              }}
-              plugins={[productAutoplay]}
-              className="w-full relative group"
-            >
-              <CarouselContent className="-ml-4">
-                {products.map(product => {
-                  const price = product.sale_price ?? product.price;
-                  const isSelected = selectedProduct?.id === product.id;
-                  return (
-                    <CarouselItem key={product.id} className="pl-4 basis-full sm:basis-1/2 lg:basis-1/3">
-                      <div
-                        onClick={() => { setSelectedProduct(product); setQuantity(1); }}
-                        className={`cursor-pointer bg-card border rounded-xl overflow-hidden transition-all hover:shadow-lg h-full flex flex-col ${isSelected ? 'border-accent ring-2 ring-accent/30' : 'border-border'
-                          }`}
-                      >
-                        <div className="aspect-square overflow-hidden shrink-0">
-                          <img src={product.images?.[0]} alt={product.name} className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
-                        </div>
-                        <div className="p-4 flex flex-col flex-1">
-                          <h3 className="font-semibold mb-1 line-clamp-2">{product.name}</h3>
-                          {product.short_description && (
-                            <p className="text-sm text-muted-foreground mb-2 line-clamp-2">{product.short_description}</p>
-                          )}
-                          <div className="flex items-center gap-2 mt-auto">
-                            <span className="text-lg font-bold text-accent">{formatCurrency(price)}</span>
-                            {product.sale_price && (
-                              <span className="text-sm text-muted-foreground line-through">{formatCurrency(product.price)}</span>
-                            )}
-                          </div>
-                          <Button className="btn-accent w-full mt-3 py-4 md:py-4 text-md h-auto whitespace-normal leading-tight !rounded-lg" onClick={(e) => { e.stopPropagation(); setSelectedProduct(product); setQuantity(1); scrollToCheckout(); }}>
-                            <ShoppingCart className="inline h-12 w-12 mr-3" />
-                            {page.hero_cta_text}
-                          </Button>
-                        </div>
-                      </div>
-                    </CarouselItem>
-                  );
-                })}
-              </CarouselContent>
-            </Carousel>
+        {/* Call Banner */}
+        <section className="py-8 md:py-12 bg-[#065f46] text-white overflow-hidden shadow-2xl relative">
+          <div className="absolute inset-0 bg-black/10 pointer-events-none" />
+          <div className="container px-4 mx-auto relative z-10">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
+              <div className="space-y-2">
+                <h2 className="text-2xl md:text-4xl font-black tracking-tight">যেকোনো প্রয়োজনে কল করুন</h2>
+                <p className="text-white/80 text-base md:text-xl font-medium">আমাদের প্রতিনিধি আপনার সাথে কথা বলতে প্রস্তুত</p>
+              </div>
+              <a 
+                href={`tel:${settings?.phone || ''}`} 
+                className="group flex items-center gap-4 bg-white text-[#065f46] px-8 md:px-12 py-4 md:py-6 rounded-2xl shadow-xl hover:shadow-white/20 transition-all duration-300 transform hover:-translate-y-1"
+              >
+                <div className="bg-[#065f46]/10 p-2 md:p-3 rounded-xl group-hover:scale-110 transition-transform">
+                  <Phone className="w-6 h-6 md:w-8 md:h-8 fill-[#065f46]" />
+                </div>
+                <div className="flex flex-col items-start">
+                  <span className="text-xs uppercase tracking-widest font-bold text-[#065f46]/60">Call Us Now</span>
+                  <span className="text-2xl md:text-4xl font-black leading-none">
+                    {settings?.phone || '01342110881'}
+                  </span>
+                </div>
+              </a>
+            </div>
           </div>
         </section>
 
@@ -622,20 +598,79 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
             )}
 
             <form onSubmit={handleSubmit} className="space-y-6">
-              {selectedProduct && (
-                <div className="bg-card border border-border rounded-xl p-3 flex items-center gap-4">
-                  <img src={selectedProduct.images?.[0]} alt="" className="w-16 h-16 rounded-lg object-cover" />
-                  <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-sm lg:text-xl truncate">{selectedProduct.name}</p>
-                    <p className="text-accent font-bold text-sm">{formatCurrency(effectivePrice)}</p>
-                  </div>
-                  <div className="flex items-center gap-1 sm:gap-2">
-                    <Button className='w-8 h-8 md:w-10 md:h-10' type="button" variant="outline" size="icon" onClick={() => setQuantity(Math.max(1, quantity - 1))}>-</Button>
-                    <span className="w-8 text-center font-bold text-sm md:text-base">{quantity}</span>
-                    <Button className='w-8 h-8 md:w-10 md:h-10' type="button" variant="outline" size="icon" onClick={() => setQuantity(quantity + 1)}>+</Button>
-                  </div>
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="h-8 w-1.5 bg-accent rounded-full" />
+                  <h3 className="font-bold text-xl md:text-2xl text-foreground">প্যাকেজটি সিলেক্ট করুন</h3>
                 </div>
-              )}
+                
+                {(() => {
+                  const fullCourse = products.find(p => (p.sale_price ?? p.price) > 2000);
+                  const halfCourse = products.find(p => (p.sale_price ?? p.price) <= 2000);
+                  const displayedProducts = [fullCourse, halfCourse].filter(Boolean) as Product[];
+
+                  return displayedProducts.map(product => {
+                    const isSelected = selectedProduct?.id === product.id;
+                    const price = product.sale_price ?? product.price;
+                    return (
+                      <div
+                        key={product.id}
+                        onClick={() => { setSelectedProduct(product); setQuantity(1); }}
+                        className={`bg-card border-2 rounded-2xl p-3 md:p-4 flex items-start gap-4 cursor-pointer transition-all duration-300 ${isSelected 
+                          ? 'border-accent bg-accent/5 shadow-md shadow-accent/10 ring-1 ring-accent' 
+                          : 'border-border hover:border-accent/50'
+                        }`}
+                      >
+                        <div className={`mt-2 w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 ${isSelected ? 'border-accent bg-accent' : 'border-border'}`}>
+                          {isSelected && <div className="w-2.5 h-2.5 rounded-full bg-white" />}
+                        </div>
+                        
+                        <div className="relative shrink-0">
+                          <img src={product.images?.[0]} alt="" className="w-20 h-20 md:w-28 md:h-28 rounded-xl object-cover shadow-sm" />
+                          {isSelected && (
+                            <div className="absolute -top-2 -right-2 bg-accent text-white p-1 rounded-full shadow-lg">
+                              <ShoppingCart className="w-3 h-3 md:w-4 md:h-4" />
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="flex-1 flex flex-col min-w-0 h-full justify-between">
+                          <div>
+                            <p className={`font-black text-base md:text-2xl leading-tight mb-1 ${isSelected ? 'text-accent' : 'text-foreground'}`}>
+                              {product.name}
+                            </p>
+                            <p className="text-accent font-black text-lg md:text-3xl">
+                              {formatCurrency(price)}
+                            </p>
+                          </div>
+                          
+                          <div className="mt-3 flex items-center gap-3" onClick={(e) => e.stopPropagation()}>
+                            <div className="flex items-center border border-border rounded-lg bg-white overflow-hidden shadow-sm">
+                              <button 
+                                className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center hover:bg-secondary transition-colors"
+                                type="button"
+                                onClick={() => isSelected && setQuantity(Math.max(1, quantity - 1))}
+                              >
+                                -
+                              </button>
+                              <span className="w-10 text-center font-bold text-sm md:text-lg">
+                                {isSelected ? quantity : 1}
+                              </span>
+                              <button 
+                                className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center hover:bg-secondary transition-colors"
+                                type="button"
+                                onClick={() => isSelected && setQuantity(quantity + 1)}
+                              >
+                                +
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  });
+                })()}
+              </div>
 
               <div className="bg-card border border-border rounded-xl p-5 space-y-4">
                 <h3 className="font-semibold">{t('checkout.contactInfo') || 'Contact Information'}</h3>
