@@ -99,62 +99,47 @@ const useLandingProducts = (ids: string[]) => {
   });
 };
 
-const PricingBanner = ({ oldPrice, newPrice }: { oldPrice: string; newPrice: string }) => (
-  <div className="w-full mt-6 md:mt-10 px-2">
-    <div className="relative bg-[#14532d] py-8 md:py-20 overflow-hidden rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.3)]">
-      {/* Decorative shimmering background */}
-      <div className="absolute inset-0 opacity-20 pointer-events-none">
-        <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-transparent via-white/5 to-transparent" />
-        <svg className="w-full h-full opacity-40" viewBox="0 0 100 100" preserveAspectRatio="none">
-          <pattern id="leaf-pattern-v2" width="15" height="15" patternUnits="userSpaceOnUse">
-            <path d="M7.5 0 Q 10 7.5 7.5 15 Q 5 7.5 7.5 0 Z" fill="white" />
-          </pattern>
-          <rect width="100" height="100" fill="url(#leaf-pattern-v2)" />
-        </svg>
-      </div>
-
-      {/* Outer Glow */}
-      <div className="absolute -inset-24 bg-[#bef264]/10 blur-[100px] animate-pulse pointer-events-none" />
-
-      {/* Frame */}
-      <div className="absolute inset-4 md:inset-6 border-[2px] border-dashed border-[#bef264]/40 rounded-xl" />
-
-      <div className="relative z-10 text-center flex flex-col items-center justify-center space-y-8 px-6 w-full">
-        {/* Old Price */}
-        <div className="text-xl md:text-3xl font-bold text-white/80 tracking-widest flex items-center justify-center gap-3">
-          <span className="relative inline-block px-4 py-2">
-            {oldPrice}
-            <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[3px] md:h-[5px] bg-red-600 -rotate-12 rounded-full shadow-[0_0_15px_rgba(220,38,38,0.7)]" />
-            <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[3px] md:h-[5px] bg-red-600 rotate-12 rounded-full shadow-[0_0_15px_rgba(220,38,38,0.7)]" />
-          </span>
-        </div>
-
-        {/* New Price with Animation */}
-        <div className="flex flex-col items-center group cursor-default">
-          <div className="text-4xl md:text-8xl font-black flex flex-wrap items-center justify-center gap-x-4 md:gap-x-6 tracking-tighter leading-none animate-bounce-subtle">
-            <span className="text-[#bef264] drop-shadow-[0_0_20px_rgba(190,242,100,0.5)] filter brightness-110">
-              {newPrice}
-            </span>
-          </div>
-
-          {/* Animated Highlight Underline */}
-          <div className="relative w-full max-w-[400px] h-2 md:h-4 mt-6">
-            <div className="absolute inset-0 bg-[#facc15] rounded-full shadow-[0_0_30px_rgba(250,204,21,0.8)] animate-pulse" />
-            <div className="absolute inset-x-8 md:inset-x-12 -bottom-2 h-2 bg-[#facc15] rounded-full opacity-40 blur-[1px]" />
-          </div>
+const PricingBanner = () => (
+  <div className="w-full mt-8 md:mt-16  max-w-7xl mx-auto space-y-4">
+    {/* Half Course Regular */}
+    <div className="relative overflow-hidden bg-white border-2 md:border-[2px] border-red-500 rounded-xl md:rounded-full py-5 md:py-6 px-4 md:px-12 shadow-sm">
+      <div className="flex flex-col items-center justify-center text-center font-black">
+        <span className="text-red-600 text-xl md:text-3xl mb-1 uppercase">রেগুলার</span>
+        <div className="text-lg md:text-4xl text-black leading-snug md:leading-normal">
+          মূল্য হাফ কোর্স (৪৫ দিন): <span className="text-red-600 line-through decoration-[2px] md:decoration-[4px]">১৭৫০</span> টাকা
         </div>
       </div>
     </div>
 
-    <style>{`
-      @keyframes bounce-subtle {
-        0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.05); }
-      }
-      .animate-bounce-subtle {
-        animation: bounce-subtle 3s ease-in-out infinite;
-      }
-    `}</style>
+    {/* Half Course Current */}
+    <div className="relative overflow-hidden bg-white border-2 md:border-[3px] border-emerald-600 rounded-xl md:rounded-full py-5 md:py-6 px-4 md:px-12 shadow-sm">
+      <div className="flex flex-col items-center justify-center text-center font-black">
+        <span className="text-red-600 text-xl md:text-3xl mb-1 uppercase">বর্তমান</span>
+        <div className="text-lg md:text-4xl text-black leading-snug md:leading-normal">
+          মূল্য হাফ কোর্স (৪৫ দিন): <span className="text-red-600 underline decoration-red-600 decoration-[3px] md:decoration-[4px] underline-offset-4 md:underline-offset-8">১৬৫০</span> টাকা
+        </div>
+      </div>
+    </div>
+
+    {/* Full Course Regular */}
+    <div className="relative overflow-hidden bg-white border-2 md:border-[3px] border-red-500 rounded-xl md:rounded-full py-5 md:py-6 px-4 md:px-12 shadow-sm">
+      <div className="flex flex-col items-center justify-center text-center font-black">
+        <span className="text-red-600 text-xl md:text-3xl mb-1 uppercase">রেগুলার</span>
+        <div className="text-lg md:text-4xl text-black leading-snug md:leading-normal">
+          মূল্য ফুল কোর্স (৯০ দিন): <span className="text-red-600 line-through decoration-[2px] md:decoration-[4px]">৩১৫০</span> টাকা
+        </div>
+      </div>
+    </div>
+
+    {/* Full Course Current */}
+    <div className="relative overflow-hidden bg-white border-2 md:border-[3px] border-emerald-600 rounded-xl md:rounded-full py-5 md:py-6 px-4 md:px-12 shadow-sm">
+      <div className="flex flex-col items-center justify-center text-center font-black">
+        <span className="text-red-600 text-xl md:text-3xl mb-1 uppercase">বর্তমান</span>
+        <div className="text-lg md:text-4xl text-black leading-snug md:leading-normal">
+          মূল্য ফুল কোর্স (৯০ দিন): <span className="text-red-600 underline decoration-red-600 decoration-[3px] md:decoration-[4px] underline-offset-4 md:underline-offset-8">২৬৫০</span> টাকা
+        </div>
+      </div>
+    </div>
   </div>
 );
 
@@ -328,7 +313,7 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
       <div className="min-h-screen bg-background overflow-x-hidden">
         {/* Hero Section */}
         <section
-          className="relative min-h-[45vh] md:min-h-[60vh] flex flex-col items-center justify-center text-center py-8 md:py-2 px-4 bg-gradient-to-br from-[#065f46] via-[#064e3b] to-[#042f2e] overflow-hidden"
+          className="relative min-h-[45vh] md:min-h-[55vh] flex flex-col items-center justify-center text-center py-8 md:py-2 px-3 bg-gradient-to-br from-[#065f46] via-[#064e3b] to-[#042f2e] overflow-hidden"
         >
           {/* Decorative elements */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -355,13 +340,13 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
             </div>
 
             {page.hero_subtitle && (
-              <p className="text-sm md:text-2xl font-demebold text-white drop-shadow-lg max-w-5xl mx-auto leading-relaxed px-4">
+              <p className="text-sm md:text-2xl font-demebold text-white drop-shadow-lg max-w-5xl mx-auto leading-relaxed">
                 {parseFormattedText(page.hero_subtitle)}
               </p>
             )}
 
-            <div className="pt-1 md:pt-4">
-              <Button size="lg" className="btn-accent text-sm md:text-xl px-6 lg:px-20 py-7 lg:py-8 rounded-lg shadow-lg hover:shadow-accent/40 transition-all font-bold" onClick={scrollToCheckout}>
+            <div className="">
+              <Button size="lg" className="btn-accent text-sm md:text-xl px-8 lg:px-20 py-6 lg:py-8 rounded-lg shadow-lg hover:shadow-accent/40 transition-all font-bold" onClick={scrollToCheckout}>
                 <ShoppingCart className="w-8 h-8 md:w-10 md:h-10 mr-4" />
                 {page.hero_cta_text}
               </Button>
@@ -372,7 +357,7 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
         {/* video and banner section */}
 
         {page.video_url && (
-          <section className="py-1 md:py-16 lg:py-8 bg-secondary/10 overflow-hidden">
+          <section className="py-4 md:py-16 lg:py-8 bg-secondary/10 overflow-hidden">
             <div className="container mx-auto px-4">
               <h2 className="text-2xl md:text-5xl font-bold text-center mb-10 leading-tight">
                 {page.video_section_title || t('') || ''}
@@ -414,7 +399,7 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
                 </div>
               )}
 
-              <div className="text-center mt-8 px-2">
+              <div className="text-center mt-8">
                 <Button size="lg" className="btn-accent text-md md:text-xl px-8 md:px-16 py-6 md:py-8 rounded-lg shadow-lg hover:shadow-accent/40 transition-all font-bold w-full md:w-auto" onClick={scrollToCheckout}>
                 <ShoppingCart className="inline h-6 w-6 md:h-8 md:w-8 mr-2 md:mr-3" />
                   {page.hero_cta_text}
@@ -424,8 +409,8 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
               {/* banner */}
 
               <div className="mt-12 mx-auto">
-                {page.show_banner && page.banner_old_price && page.banner_new_price && (
-                  <PricingBanner oldPrice={page.banner_old_price} newPrice={page.banner_new_price} />
+                {page.show_banner && (
+                  <PricingBanner />
                 )}
               </div>
             </div>
@@ -531,78 +516,55 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
             </div>
           </section>
         )}
-
-        {/* reviews section */}
-        {((page.testimonial_cards && page.testimonial_cards.length > 0) || (page.show_reviews && reviews.length > 0)) && (
-          <section className="py-4 md:py-8 overflow-hidden">
-            <div className="container px-4 mx-auto">
-              <h2 className="text-3xl md:text-5xl font-bold text-center mb-12">
-                {t('common.customerReviews') || 'ক্রেতারা যা বলছেন'}
-              </h2>
-              
-              <Carousel
-                opts={{
-                  align: "start",
-                  loop: true,
-                }}
-                plugins={[reviewAutoplay]}
-                className="w-full relative group"
-              >
-                <CarouselContent className="-ml-6">
-                  {page.testimonial_cards && page.testimonial_cards.length > 0 ? (
-                    page.testimonial_cards.map((testimonial, i) => (
-                      <CarouselItem key={i} className="pl-6 basis-full sm:basis-1/2 lg:basis-1/3">
-                        <div className="bg-white border border-border/60 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col h-full">
-                          <div className="flex gap-1 mb-4">
-                            {Array.from({ length: 5 }).map((_, starI) => (
-                              <Star 
-                                key={starI} 
-                                className={`h-5 w-5 ${starI < testimonial.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-200'}`} 
-                              />
-                            ))}
-                          </div>
-                          <p className="text-gray-600 mb-6 flex-grow leading-relaxed italic">
-                            "{testimonial.text}"
-                          </p>
-                          <div className="flex items-center gap-3 border-t pt-4">
-                            <p className="font-bold text-gray-900">{testimonial.name}</p>
-                          </div>
-                        </div>
-                      </CarouselItem>
-                    ))
-                  ) : (
-                    reviews.slice(0, 10).map(review => (
-                      <CarouselItem key={review.id} className="pl-6 basis-full sm:basis-1/2 lg:basis-1/3">
-                        <div className="bg-white border border-border/60 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col h-full">
-                          <div className="flex gap-1 mb-4">
-                            {Array.from({ length: 5 }).map((_, i) => (
-                              <Star key={i} className={`h-5 w-5 ${i < review.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-200'}`} />
-                            ))}
-                          </div>
-                          <p className="text-gray-600 mb-6 flex-grow leading-relaxed italic">"{review.text}"</p>
-                          <div className="flex items-center gap-3 border-t pt-4">
-                            <p className="font-bold text-gray-900">{review.name}</p>
-                          </div>
-                        </div>
-                      </CarouselItem>
-                    ))
-                  )}
-                </CarouselContent>
-                <div className="flex justify-center md:block">
-                  <CarouselPrevious className="static md:absolute -translate-y-0 md:top-1/2 md:-translate-y-1/2 md:-left-12 mt-6 md:mt-0 mr-4 md:mr-0 h-10 w-10 border-accent text-accent hover:bg-accent hover:text-white" />
-                  <CarouselNext className="static md:absolute -translate-y-0 md:top-1/2 md:-translate-y-1/2 md:-right-12 mt-6 md:mt-0 h-10 w-10 border-accent text-accent hover:bg-accent hover:text-white" />
-                </div>
-              </Carousel>
-
-              <div className="text-center mt-10 px-4">
-                <Button size="lg" className="btn-accent text-smm md:text-xl px-8 md:px-16 py-6 md:py-8 rounded-lg shadow-lg hover:shadow-accent/40 transition-all font-bold w-full md:w-auto" onClick={scrollToCheckout}>
-                <ShoppingCart className="inline h-6 w-6 md:h-8 md:w-8 mr-2 md:mr-3" />
-                  {page.hero_cta_text}
-                </Button>
+        {/* facebook comments section */}
+        <section className="py-8 md:py-16 bg-secondary/5 overflow-hidden">
+          <div className="container px-0 md:px-1 mx-auto">
+            <h2 className="text-2xl md:text-4xl font-bold text-center mb-12">
+              আমাদের কাস্টমারদের মতামত
+            </h2>
+            
+            <Carousel
+              opts={{
+                align: "center",
+                loop: true,
+              }}
+              plugins={[reviewAutoplay]}
+              className="w-full container mx-auto relative group"
+            >
+              <CarouselContent className="-ml-4">
+                {[
+                  "/fb1.jpg",
+                  "/fb2.jpg",
+                  "/fb3.jpg",
+                  "/fb4.jpg",
+                  "/fb5.jpg",
+                  "/fb6.jpg"
+                ].map((img, i) => (
+                  <CarouselItem key={i} className="pl-4 basis-full sm:basis-1/2 md:basis-1/2 lg:basis-1/2">
+                    <div className="bg-white rounded-xl overflow-hidden shadow-lg border border-border/50 hover:shadow-xl transition-all duration-300">
+                      <img 
+                        src={img} 
+                        alt={`Customer Comment ${i + 1}`} 
+                        className="w-full h-auto object-contain"
+                      />
+                    </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <div className="flex justify-center md:block">
+                <CarouselPrevious className="static md:absolute -translate-y-0 md:top-1/2 md:-translate-y-1/2 md:-left-12 mt-6 md:mt-0 mr-4 md:mr-0 h-10 w-10 border-accent text-accent hover:bg-accent hover:text-white shadow-lg" />
+                <CarouselNext className="static md:absolute -translate-y-0 md:top-1/2 md:-translate-y-1/2 md:-right-12 mt-6 md:mt-0 h-10 w-10 border-accent text-accent hover:bg-accent hover:text-white shadow-lg" />
               </div>
+            </Carousel>
+
+            <div className="text-center mt-12 px-4">
+              <Button size="lg" className="btn-accent text-lg md:text-xl px-10 md:px-20 py-6 md:py-8 rounded-lg shadow-xl hover:shadow-accent/40 transition-all font-bold w-full md:w-auto" onClick={scrollToCheckout}>
+                <ShoppingCart className="inline h-6 w-6 md:h-8 md:w-8 mr-2 md:mr-3" />
+                {page.hero_cta_text}
+              </Button>
             </div>
-          </section>
-        )}
+          </div>
+        </section>
 
         {/* videos grid section */}
         {page.video_cards && page.video_cards.length > 0 && (
@@ -636,7 +598,7 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
                 ))}
               </div>
               
-              <div className="text-center mt-10 px-2">
+              <div className="text-center mt-10">
                 <Button size="lg" className="btn-accent text-lg md:text-xl px-8 md:px-16 py-6 md:py-8 rounded-lg font-bold w-full md:w-auto" onClick={scrollToCheckout}>
                   <ShoppingCart className="inline h-6 w-6 md:h-8 md:w-8 mr-2 md:mr-3" />
                   {page.hero_cta_text}
