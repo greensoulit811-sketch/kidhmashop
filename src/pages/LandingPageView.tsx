@@ -23,6 +23,7 @@ import {
   CarouselNext,
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
+import { trackPurchase, trackInitiateCheckout, trackViewContent } from '@/lib/facebook-pixel';
 
 const getVideoEmbedUrl = (url: string) => {
   const value = url.trim();
@@ -180,6 +181,18 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
     }
   }, [products]);
 
+  // Track ViewContent when product is selected
+  useEffect(() => {
+    if (selectedProduct) {
+      trackViewContent({
+        contentId: selectedProduct.id,
+        contentName: selectedProduct.name,
+        value: selectedProduct.sale_price || selectedProduct.price,
+        currency: settings.currency_code,
+      });
+    }
+  }, [selectedProduct, settings.currency_code]);
+
   useEffect(() => {
     if (shippingMethods.length > 0 && !formData.shippingMethodId) {
       setFormData(prev => ({ ...prev, shippingMethodId: shippingMethods[0].id }));
@@ -219,6 +232,11 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
   };
 
   const scrollToCheckout = () => {
+    trackInitiateCheckout({
+      numItems: quantity,
+      value: subtotal,
+      currency: settings.currency_code
+    });
     document.getElementById('lp-checkout')?.scrollIntoView({ behavior: 'smooth' });
   };
 
@@ -275,6 +293,20 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
           variant_info: null,
         }],
       });
+
+      // Track Purchase Event
+      trackPurchase({
+        orderId: orderNumber,
+        value: total,
+        currency: settings.currency_code,
+        contents: [{
+          id: selectedProduct.id,
+          quantity,
+          item_price: effectivePrice
+        }],
+        phone: formData.phone
+      });
+
       navigate(`/order-success?orderId=${orderNumber}`);
     } catch (error) {
       // handled by mutation

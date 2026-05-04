@@ -158,7 +158,16 @@ export default function CartPage() {
                 <span className="text-xl font-bold">{formatCurrency(subtotal)}</span>
               </div>
 
-              <Link to="/checkout">
+              <Link to="/checkout" onClick={() => {
+                const { trackInitiateCheckout } = import('@/lib/facebook-pixel');
+                import('@/lib/facebook-pixel').then(m => {
+                  m.trackInitiateCheckout({
+                    numItems: items.reduce((sum, i) => sum + i.quantity, 0),
+                    value: subtotal,
+                    currency: 'BDT' // Defaulting to BDT or getting from settings if possible
+                  });
+                });
+              }}>
                 <Button size="lg" className="btn-buy-now w-full h-12 text-sm md:text-base">
                   {t('cart.proceedToCheckout')}
                   <ArrowRight className="h-4 w-4 ml-2" />

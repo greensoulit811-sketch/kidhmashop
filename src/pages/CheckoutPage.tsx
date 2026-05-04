@@ -208,6 +208,20 @@ export default function CheckoutPage() {
         }),
       });
 
+      // Track Purchase Event
+      const { trackPurchase } = await import('@/lib/facebook-pixel');
+      trackPurchase({
+        orderId: orderNumber,
+        value: total,
+        currency: settings.currency_code,
+        contents: items.map(item => ({
+          id: item.id,
+          quantity: item.quantity,
+          item_price: item.salePrice ?? item.price
+        })),
+        phone: formData.phone
+      });
+
       if (orderResult?.id) {
         convertLead.mutate(orderResult.id);
       }
