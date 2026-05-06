@@ -449,6 +449,77 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
           </section>
         )}
 
+        {/* Product Grid Section */}
+        {products.length > 0 && (
+          <section className="py-12 md:py-24 bg-white relative overflow-hidden">
+            {/* Background elements */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-accent/5 blur-[100px] rounded-full pointer-events-none" />
+            <div className="absolute bottom-0 left-0 w-96 h-96 bg-accent/5 blur-[120px] rounded-full pointer-events-none" />
+            
+            <div className="container mx-auto px-4 relative z-10">
+              <div className="flex flex-col items-center mb-12 md:mb-16">
+                <h2 className="text-xl md:text-5xl font-black text-center mb-4 text-gray-900">
+                  আমাদের <span className="text-accent">পণ্যসমূহ</span>
+                </h2>
+                <div className="h-1 w-24 bg-accent rounded-full" />
+              </div>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-10">
+                {products.map(product => {
+                  const price = product.sale_price ?? product.price;
+                  return (
+                    <div 
+                      key={product.id} 
+                      className="group flex flex-col bg-white border border-gray-100 rounded-xl overflow-hidden hover:shadow-[0_20px_50px_rgba(34,197,94,0.15)] transition-all duration-500 transform hover:-translate-y-2"
+                    >
+                      <div className="aspect-square overflow-hidden relative">
+                        <img 
+                          src={product.images?.[0]} 
+                          alt={product.name} 
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
+                        />
+                        {product.sale_price && (
+                          <div className="absolute top-4 right-4 bg-red-500 text-white text-xs font-black px-4 py-2 rounded-full shadow-lg">
+                            HOT SALE
+                          </div>
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                      </div>
+                      
+                      <div className="p-6 md:p-8 flex flex-col flex-1">
+                        <h3 className="font-bold text-lg md:text-xl -mb-3 text-gray-800 line-clamp-2 h-14">
+                          {product.name}
+                        </h3>
+                        <div className="flex items-center gap-3 mb-6">
+                          <span className="text-accent font-black text-2xl md:text-3xl">
+                            {formatCurrency(price)}
+                          </span>
+                          {product.sale_price && (
+                            <span className="text-gray-400 line-through text-sm md:text-base font-medium">
+                              {formatCurrency(product.price)}
+                            </span>
+                          )}
+                        </div>
+                        <Button 
+                          onClick={() => { 
+                            setSelectedProduct(product); 
+                            setQuantity(1);
+                            document.getElementById('lp-checkout')?.scrollIntoView({ behavior: 'smooth' }); 
+                          }}
+                          className="w-full btn-accent text-base md:text-lg font-black py-6 md:py-8 rounded-xl shadow-lg hover:shadow-accent/40 transition-all active:scale-95"
+                        >
+                          <ShoppingCart className="w-5 h-5 mr-2" />
+                          অর্ডার করুন
+                        </Button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </section>
+        )}
+
         {/* Call Banner */}
         <section className="py-8 md:py-12 bg-[#065f46] text-white overflow-hidden shadow-2xl relative">
           <div className="absolute inset-0 bg-black/10 pointer-events-none" />
@@ -637,11 +708,11 @@ export default function LandingPageView({ slug: slugProp }: { slug?: string }) {
                 </div>
                 
                 {(() => {
-                  const fullCourse = products.find(p => (p.sale_price ?? p.price) > 2000);
-                  const halfCourse = products.find(p => (p.sale_price ?? p.price) <= 2000);
-                  const displayedProducts = [fullCourse, halfCourse].filter(Boolean) as Product[];
-
-                  return displayedProducts.map(product => {
+                  const displayedInCheckout = [...products.slice(0, 2)];
+                  if (selectedProduct && !displayedInCheckout.find(p => p.id === selectedProduct.id)) {
+                    displayedInCheckout.push(selectedProduct);
+                  }
+                  return displayedInCheckout.map(product => {
                     const isSelected = selectedProduct?.id === product.id;
                     const price = product.sale_price ?? product.price;
                     return (
